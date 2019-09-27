@@ -1,17 +1,17 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "QList"
+#include <QList>
 #include "vertex.h"
 
 struct Face
 {
-    int vertexIndexes[3];
+    int vertexIndexes[3] = {};
 };
 
 struct Edge
 {
-    int vertexIndexes[2];
+    int vertexIndexes[2] = {};
 };
 
 class Mesh
@@ -30,7 +30,7 @@ public:
 
     void Clear();
 
-    QList<Vertex> GetVertices();
+    QList<Vertex> GetVertices() const;
 
     Vertex& GetVertex(const int& index);
     int GetVerticesNum() const;

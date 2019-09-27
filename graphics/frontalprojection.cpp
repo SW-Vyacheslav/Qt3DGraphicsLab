@@ -3,17 +3,17 @@
 
 FrontalProjection::FrontalProjection() {}
 
-QList<QPointF> FrontalProjection::GetProjectionPoints(QList<Vertex> vertices)
-{
-    QList<QPointF> val;
+FrontalProjection::~FrontalProjection() {}
 
+QList<Point> FrontalProjection::GetProjectionPoints(const QList<Vertex>& vertices)
+{
+    QList<Point> val;
     for (int i = 0; i < vertices.length(); i++)
     {
-        QPointF point;
-        point.setX(static_cast<double>(vertices[i].GetPosition().GetX()));
-        point.setY(static_cast<double>(vertices[i].GetPosition().GetY()));
+        Point point;
+        point.x = vertices[i].GetPosition().GetX();
+        point.y = vertices[i].GetPosition().GetY();
         val.push_back(point);
     }
-
     return val;
 }

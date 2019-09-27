@@ -2,13 +2,15 @@
 #define FRONTALPROJECTION_H
 
 #include "projection.h"
+#include "point.h"
 
 class FrontalProjection : public Projection
 {
 public:
     FrontalProjection();
+    ~FrontalProjection() override;
 
-    QList<QPointF> GetProjectionPoints(QList<Vertex> vertices) override;
+    QList<Point> GetProjectionPoints(const QList<Vertex>& vertices) override;
 };
 
 #endif // FRONTALPROJECTION_H

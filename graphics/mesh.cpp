@@ -39,7 +39,7 @@ void Mesh::Clear()
     m_faces.clear();
 }
 
-QList<Vertex> Mesh::GetVertices()
+QList<Vertex> Mesh::GetVertices() const
 {
     return m_vertices;
 }

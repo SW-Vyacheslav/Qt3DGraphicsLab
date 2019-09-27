@@ -9,21 +9,63 @@ void Thorus::Construct(const int &n, const int &m, const int &R, const int &r)
 {
     GetMesh().Clear();
 
-    int rStep = 360 / n;
-    int RStep = 360 / m;
+    float RStep = floorf(360 / m);
+    float rStep = floorf(360 / n);
 
-    int maxRAngle = (RStep % m == 0) ? 360 : RStep * m;
-    int maxrAngle = (rStep % n == 0) ? 180 : RStep * m - 180;
+    float rAngle = -180;
+    float RAngle = 0;
 
-    for (int RAngle = 0; RAngle < maxRAngle; RAngle += RStep)
+    for (int i = 0; i < m; i++)
     {
-        for (int rAngle = -180; rAngle < maxrAngle; rAngle += rStep)
+        for (int j = 0; j < n; j++)
         {
             Vertex vert;
-            vert.GetPosition().SetX((R + r * cosf(Converter::DegreesToRadians(rAngle))) * cosf(Converter::DegreesToRadians(RAngle)));
-            vert.GetPosition().SetY((R + r * cosf(Converter::DegreesToRadians(rAngle))) * sinf(Converter::DegreesToRadians(RAngle)));
-            vert.GetPosition().SetZ(r * sinf(Converter::DegreesToRadians(rAngle)));
+            vert.SetPosition(
+                        (R + r * cosf(Converter::DegreesToRadians(rAngle))) * cosf(Converter::DegreesToRadians(RAngle)),
+                        (R + r * cosf(Converter::DegreesToRadians(rAngle))) * sinf(Converter::DegreesToRadians(RAngle)),
+                        r * sinf(Converter::DegreesToRadians(rAngle)));
             GetMesh().AddVertex(vert);
+            rAngle += rStep;
+        }
+        rAngle = -180;
+        RAngle += RStep;
+    }
+
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            Edge edge;
+            if(j + 1 == n)
+            {
+                edge.vertexIndexes[0] = j + (i * n);
+                edge.vertexIndexes[1] = j + (i * n) - n + 1;
+            }
+            else
+            {
+                edge.vertexIndexes[0] = j + (i * n);
+                edge.vertexIndexes[1] = j + (i * n) + 1;
+            }
+            GetMesh().AddEdge(edge);
+        }
+    }
+
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            Edge edge;
+            if((i + 1) != m)
+            {
+                edge.vertexIndexes[0] = j + (i * n);
+                edge.vertexIndexes[1] = j + ((i + 1) * n);
+            }
+            else
+            {
+                edge.vertexIndexes[0] = j + (i * n);
+                edge.vertexIndexes[1] = j;
+            }
+            GetMesh().AddEdge(edge);
         }
     }
 }

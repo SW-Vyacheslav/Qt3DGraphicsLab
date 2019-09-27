@@ -2,10 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "QPainter"
+#include <QPainter>
 #include "graphics/thorus.h"
 #include "graphics/projection.h"
-#include "QPointF"
+#include "graphics/point.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,19 +22,24 @@ public:
 private:
     bool eventFilter(QObject* watched, QEvent* event);
     void drawObject(QPainter& painter);
-    QList<QPointF> PointsToCoordSystem(const QList<QPointF>& vertices);
+    QList<Point> PointsToCoordSystem(const QList<Point>& vertices);
 
 public slots:
     void generateObject();
     void translateObject();
     void scaleObject();
     void rotateObject();
+    void setHorizontalProjection();
+    void setFrontalProjection();
+    void setProfileProjection();
+    void setOperationPoint();
 
 private:
     Ui::MainWindow *ui;
     bool m_isUpdate;
     Thorus m_thorus;
     Vector3D m_coordSysCenter;
+    Vector3D m_operationPoint;
     Projection* m_projection;
 };
 

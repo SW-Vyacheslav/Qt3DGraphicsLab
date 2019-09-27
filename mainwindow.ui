@@ -53,7 +53,10 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="rLabel">
+        <property name="toolTip">
+         <string>Radius of forming circle</string>
+        </property>
         <property name="text">
          <string>r:</string>
         </property>
@@ -66,7 +69,10 @@
        <widget class="QSpinBox" name="rVal"/>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="nLabel">
+        <property name="toolTip">
+         <string>Approximation of forming circle</string>
+        </property>
         <property name="text">
          <string>n:</string>
         </property>
@@ -91,7 +97,10 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="RLabel">
+        <property name="toolTip">
+         <string>Radius of thorus circle</string>
+        </property>
         <property name="text">
          <string>R:</string>
         </property>
@@ -104,7 +113,10 @@
        <widget class="QSpinBox" name="RVal"/>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="mLabel">
+        <property name="toolTip">
+         <string>Approximation of thorus circle</string>
+        </property>
         <property name="text">
          <string>m:</string>
         </property>
@@ -167,54 +179,12 @@
       </rect>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Transform</string>
       </attribute>
-      <widget class="QWidget" name="formLayoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>160</width>
-         <height>83</height>
-        </rect>
-       </property>
-       <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>x:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>y:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>z:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="xVal"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="yVal"/>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="zVal"/>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="verticalLayoutWidget">
        <property name="geometry">
         <rect>
@@ -316,11 +286,99 @@
         </property>
        </widget>
       </widget>
+      <widget class="QWidget" name="formLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>158</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>x:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>y:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>z:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="xVal"/>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="yVal"/>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="zVal"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
        <string>Projections</string>
       </attribute>
+      <widget class="QGroupBox" name="groupBox_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>271</width>
+         <height>61</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>Orthographic</string>
+       </property>
+       <widget class="QWidget" name="horizontalLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>20</y>
+          <width>251</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QPushButton" name="frontalButton">
+           <property name="text">
+            <string>Frontal</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="horizontalButton">
+           <property name="text">
+            <string>Horizontal</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="profileButton">
+           <property name="text">
+            <string>Profile</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </widget>
     </widget>
    </widget>

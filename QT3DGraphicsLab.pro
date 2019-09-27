@@ -13,6 +13,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     graphics/frontalprojection.cpp \
+    graphics/horizontalprojection.cpp \
+    graphics/profileprojection.cpp \
     graphics/projection.cpp \
     graphics/thorus.cpp \
     mainwindow.cpp \
@@ -25,7 +27,10 @@ SOURCES += main.cpp \
 
 HEADERS  += mainwindow.h \
     graphics/frontalprojection.h \
+    graphics/horizontalprojection.h \
     graphics/mesh.h \
+    graphics/point.h \
+    graphics/profileprojection.h \
     graphics/projection.h \
     graphics/renderobject.h \
     graphics/thorus.h \
