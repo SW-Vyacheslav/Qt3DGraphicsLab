@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QPainter>
-#include "graphics/thorus.h"
+#include "graphics/renderobject.h"
 #include "graphics/projection.h"
 #include "graphics/point.h"
 
@@ -20,7 +20,7 @@ public:
     ~MainWindow();
 
 private:
-    bool eventFilter(QObject* watched, QEvent* event);
+    bool eventFilter(QObject* object, QEvent* event);
     void drawObject(QPainter& painter);
     QList<Point> PointsToCoordSystem(const QList<Point>& vertices);
 
@@ -32,12 +32,13 @@ public slots:
     void setHorizontalProjection();
     void setFrontalProjection();
     void setProfileProjection();
+    void setAxonometricProjection();
+    void setObliqueProjection();
     void setOperationPoint();
 
 private:
     Ui::MainWindow *ui;
-    bool m_isUpdate;
-    Thorus m_thorus;
+    RenderObject* m_renderObject;
     Vector3D m_coordSysCenter;
     Vector3D m_operationPoint;
     Projection* m_projection;

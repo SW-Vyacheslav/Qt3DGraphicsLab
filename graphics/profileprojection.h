@@ -2,7 +2,6 @@
 #define PROFILEPROJECTION_H
 
 #include "projection.h"
-#include "point.h"
 
 class ProfileProjection : public Projection
 {

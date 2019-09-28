@@ -9,8 +9,8 @@ void Thorus::Construct(const int &n, const int &m, const int &R, const int &r)
 {
     GetMesh().Clear();
 
-    float RStep = floorf(360 / m);
-    float rStep = floorf(360 / n);
+    float RStep = 360.0f / m;
+    float rStep = 360.0f / n;
 
     float rAngle = -180;
     float RAngle = 0;

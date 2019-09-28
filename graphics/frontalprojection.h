@@ -2,7 +2,6 @@
 #define FRONTALPROJECTION_H
 
 #include "projection.h"
-#include "point.h"
 
 class FrontalProjection : public Projection
 {

@@ -12,8 +12,10 @@ TARGET = QT3DGraphicsLab
 TEMPLATE = app
 
 SOURCES += main.cpp \
+    graphics/axonometricprojection.cpp \
     graphics/frontalprojection.cpp \
     graphics/horizontalprojection.cpp \
+    graphics/obliqueprojection.cpp \
     graphics/profileprojection.cpp \
     graphics/projection.cpp \
     graphics/thorus.cpp \
@@ -26,9 +28,11 @@ SOURCES += main.cpp \
     math/Vector3D.cpp
 
 HEADERS  += mainwindow.h \
+    graphics/axonometricprojection.h \
     graphics/frontalprojection.h \
     graphics/horizontalprojection.h \
     graphics/mesh.h \
+    graphics/obliqueprojection.h \
     graphics/point.h \
     graphics/profileprojection.h \
     graphics/projection.h \

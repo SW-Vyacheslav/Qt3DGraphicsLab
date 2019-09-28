@@ -22,6 +22,8 @@ RenderObject::RenderObject()
     m_rotZMat.SetElementAt(3, 3, 1.0f);
 }
 
+RenderObject::~RenderObject() {}
+
 void RenderObject::Translate(const float& x, const float& y, const float& z)
 {
     m_translateMat.SetElementAt(3, 0, x);

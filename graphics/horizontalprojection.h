@@ -2,7 +2,6 @@
 #define HORIZONTALPROJECTION_H
 
 #include "projection.h"
-#include "point.h"
 
 class HorizontalProjection : public Projection
 {

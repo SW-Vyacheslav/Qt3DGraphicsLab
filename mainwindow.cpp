@@ -2,23 +2,25 @@
 #include "ui_mainwindow.h"
 #include "graphics/vertex.h"
 #include "graphics/mesh.h"
+#include "graphics/thorus.h"
 #include "graphics/frontalprojection.h"
 #include "graphics/horizontalprojection.h"
 #include "graphics/profileprojection.h"
+#include "graphics/axonometricprojection.h"
+#include "graphics/obliqueprojection.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->outputWidget->installEventFilter(this);
-    ui->mVal->setRange(3,50);
-    ui->nVal->setRange(3,50);
-    ui->RVal->setRange(1,200);
-    ui->rVal->setRange(1,200);
+    ui->mVal->setRange(3, 50);
+    ui->nVal->setRange(3, 50);
+    ui->RVal->setRange(1, 1000);
+    ui->rVal->setRange(1, 1000);
     ui->mVal->setValue(30);
     ui->nVal->setValue(30);
     ui->RVal->setValue(100);
     ui->rVal->setValue(40);
-
     ui->xVal->setValidator(new QDoubleValidator());
     ui->yVal->setValidator(new QDoubleValidator());
     ui->zVal->setValidator(new QDoubleValidator());
@@ -31,12 +33,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->opXVal->setText("0");
     ui->opYVal->setText("0");
     ui->opZVal->setText("0");
+    ui->alphaAxVal->setValidator(new QDoubleValidator());
+    ui->betaAxVal->setValidator(new QDoubleValidator());
+    ui->alphaAxVal->setText("45");
+    ui->betaAxVal->setText("45");
+    ui->alphaOblVal->setValidator(new QDoubleValidator());
+    ui->lOblVal->setValidator(new QDoubleValidator());
+    ui->alphaOblVal->setText("45");
+    ui->lOblVal->setText("1");
 
     setFixedSize(width(), height());
-    m_isUpdate = false;
     m_coordSysCenter.SetX(ui->outputWidget->width() / 2);
     m_coordSysCenter.SetY(ui->outputWidget->height() / 2);
     m_projection = new FrontalProjection();
+    m_renderObject = new Thorus();
 
     connect(ui->generateButton, SIGNAL(clicked()), this, SLOT(generateObject()));
     connect(ui->translateButton, SIGNAL(clicked()), this, SLOT(translateObject()));
@@ -46,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->horizontalButton, SIGNAL(clicked()), this, SLOT(setHorizontalProjection()));
     connect(ui->profileButton, SIGNAL(clicked()), this, SLOT(setProfileProjection()));
     connect(ui->setButton, SIGNAL(clicked()), this, SLOT(setOperationPoint()));
+    connect(ui->axonometricButton, SIGNAL(clicked()), this, SLOT(setAxonometricProjection()));
+    connect(ui->obliqueButton, SIGNAL(clicked()), this, SLOT(setObliqueProjection()));
 }
 
 MainWindow::~MainWindow()
@@ -55,39 +67,34 @@ MainWindow::~MainWindow()
 
 void MainWindow::generateObject()
 {
-    m_isUpdate = true;
-    m_thorus.Construct(ui->nVal->value(), ui->mVal->value(), ui->RVal->value(), ui->rVal->value());
+    static_cast<Thorus*>(m_renderObject)->Construct(ui->nVal->value(), ui->mVal->value(), ui->RVal->value(), ui->rVal->value());
     ui->outputWidget->update();
 }
 
 void MainWindow::translateObject()
 {
-    m_isUpdate = true;
-    m_thorus.Translate(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
+    m_renderObject->Translate(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
     ui->outputWidget->update();
 }
 
 void MainWindow::scaleObject()
 {
-    m_isUpdate = true;
-    m_thorus.Translate(-m_operationPoint.GetX(), -m_operationPoint.GetY(), -m_operationPoint.GetZ());
-    m_thorus.Scale(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
-    m_thorus.Translate(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
+    m_renderObject->Translate(-m_operationPoint.GetX(), -m_operationPoint.GetY(), -m_operationPoint.GetZ());
+    m_renderObject->Scale(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
+    m_renderObject->Translate(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
     ui->outputWidget->update();
 }
 
 void MainWindow::rotateObject()
 {
-    m_isUpdate = true;
-    m_thorus.Translate(-m_operationPoint.GetX(), -m_operationPoint.GetY(), -m_operationPoint.GetZ());
-    m_thorus.Rotate(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
-    m_thorus.Translate(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
+    m_renderObject->Translate(-m_operationPoint.GetX(), -m_operationPoint.GetY(), -m_operationPoint.GetZ());
+    m_renderObject->Rotate(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
+    m_renderObject->Translate(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
     ui->outputWidget->update();
 }
 
 void MainWindow::setHorizontalProjection()
 {
-    m_isUpdate = true;
     delete m_projection;
     m_projection = new HorizontalProjection();
     ui->outputWidget->update();
@@ -95,7 +102,6 @@ void MainWindow::setHorizontalProjection()
 
 void MainWindow::setFrontalProjection()
 {
-    m_isUpdate = true;
     delete m_projection;
     m_projection = new FrontalProjection();
     ui->outputWidget->update();
@@ -103,45 +109,53 @@ void MainWindow::setFrontalProjection()
 
 void MainWindow::setProfileProjection()
 {
-    m_isUpdate = true;
     delete m_projection;
     m_projection = new ProfileProjection();
     ui->outputWidget->update();
 }
 
+void MainWindow::setAxonometricProjection()
+{
+    delete m_projection;
+    m_projection = new AxonometricProjection(ui->alphaAxVal->text().toFloat(), ui->betaAxVal->text().toFloat());
+    ui->outputWidget->update();
+}
+
+void MainWindow::setObliqueProjection()
+{
+    delete m_projection;
+    m_projection = new ObliqueProjection(ui->alphaOblVal->text().toFloat(), ui->lOblVal->text().toFloat());
+    ui->outputWidget->update();
+}
+
 void MainWindow::setOperationPoint()
 {
-    m_isUpdate = true;
     m_operationPoint.SetX(ui->opXVal->text().toFloat());
     m_operationPoint.SetY(ui->opYVal->text().toFloat());
     m_operationPoint.SetZ(ui->opZVal->text().toFloat());
     ui->outputWidget->update();
 }
 
-bool MainWindow::eventFilter(QObject* watched, QEvent* event)
+bool MainWindow::eventFilter(QObject* object, QEvent* event)
 {
-    if (watched == ui->outputWidget && event->type() == QEvent::Paint && m_isUpdate)
+    if (object == ui->outputWidget && event->type() == QEvent::Paint)
     {
         QPainter painter;
         painter.begin(ui->outputWidget);
         drawObject(painter);
         painter.end();
-        m_isUpdate = false;
         return true;
     }
+
     return false;
 }
 
 void MainWindow::drawObject(QPainter& painter)
 {
-    Mesh& objMesh = m_thorus.GetMesh();
+    Mesh& objMesh = m_renderObject->GetMesh();
     QList<Point> points = PointsToCoordSystem(m_projection->GetProjectionPoints(objMesh.GetVertices()));
-    painter.setPen(Qt::blue);
-    for (int i = 0; i < points.length(); i++)
-    {
-        painter.drawPoint(static_cast<int>(points[i].x), static_cast<int>(points[i].y));
-    }
-    painter.setPen(Qt::black);
+    painter.fillRect(0, 0, width(), height(), Qt::black);
+    painter.setPen(Qt::white);
     for (int i = 0; i < objMesh.GetEdgesNum(); i++)
     {
         Edge& edge = objMesh.GetEdge(i);
@@ -151,11 +165,17 @@ void MainWindow::drawObject(QPainter& painter)
                     static_cast<int>(points[edge.vertexIndexes[1]].x),
                     static_cast<int>(points[edge.vertexIndexes[1]].y));
     }
+    painter.setPen(Qt::red);
+    painter.setBrush(Qt::red);
+    for (int i = 0; i < points.length(); i++)
+    {
+        painter.drawRect(static_cast<int>(points[i].x) - 1, static_cast<int>(points[i].y) - 1, 2, 2);
+    }
     Vertex opCenter;
     opCenter.SetPosition(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
     points = PointsToCoordSystem(m_projection->GetProjectionPoints({opCenter}));
-    painter.setPen(Qt::red);
-    painter.setBrush(Qt::red);
+    painter.setPen(Qt::yellow);
+    painter.setBrush(Qt::yellow);
     painter.drawEllipse(static_cast<int>(points[0].x)-5, static_cast<int>(points[0].y)-5, 10, 10);
 }
 

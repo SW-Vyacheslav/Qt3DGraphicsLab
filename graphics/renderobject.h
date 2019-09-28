@@ -9,6 +9,7 @@ class RenderObject
 {
 public:
     RenderObject();
+    virtual ~RenderObject();
 
     void Translate(const float& x, const float& y, const float& z);
     void Scale(const float& x, const float& y, const float& z);
