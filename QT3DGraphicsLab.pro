@@ -15,9 +15,10 @@ SOURCES += main.cpp \
     graphics/axonometricprojection.cpp \
     graphics/frontalprojection.cpp \
     graphics/horizontalprojection.cpp \
+    graphics/iprojection.cpp \
     graphics/obliqueprojection.cpp \
+    graphics/perspectiveprojection.cpp \
     graphics/profileprojection.cpp \
-    graphics/projection.cpp \
     graphics/thorus.cpp \
     mainwindow.cpp \
     graphics/mesh.cpp \
@@ -31,11 +32,13 @@ HEADERS  += mainwindow.h \
     graphics/axonometricprojection.h \
     graphics/frontalprojection.h \
     graphics/horizontalprojection.h \
+    graphics/iprojection.h \
     graphics/mesh.h \
     graphics/obliqueprojection.h \
+    graphics/perspectiveprojection.h \
     graphics/point.h \
     graphics/profileprojection.h \
-    graphics/projection.h \
+    graphics/projections.h \
     graphics/renderobject.h \
     graphics/thorus.h \
     graphics/vertex.h \

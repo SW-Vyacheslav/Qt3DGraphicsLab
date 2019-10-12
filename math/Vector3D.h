@@ -21,7 +21,10 @@ public:
     float GetW() const;
 
     float GetLength() const;
-    Vector3D Normalize() const;
+    Vector3D GetNormalized() const;
+    void Normalize();
+    Vector3D GetCartesian() const;
+    void ToCartesian();
 
     static float DotProduct(const Vector3D& vec1, const Vector3D& vec2);
     static Vector3D CrossProduct(const Vector3D& vec1, const Vector3D& vec2);

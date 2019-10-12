@@ -5,10 +5,10 @@
 #include "point.h"
 #include "vertex.h"
 
-class Projection
+class IProjection
 {
 public:
-    virtual ~Projection();
+    virtual ~IProjection();
 
     virtual QList<Point> GetProjectionPoints(const QList<Vertex>& vertices) = 0;
 };

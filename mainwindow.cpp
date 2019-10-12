@@ -3,11 +3,7 @@
 #include "graphics/vertex.h"
 #include "graphics/mesh.h"
 #include "graphics/thorus.h"
-#include "graphics/frontalprojection.h"
-#include "graphics/horizontalprojection.h"
-#include "graphics/profileprojection.h"
-#include "graphics/axonometricprojection.h"
-#include "graphics/obliqueprojection.h"
+#include "graphics/projections.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -41,6 +37,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->lOblVal->setValidator(new QDoubleValidator());
     ui->alphaOblVal->setText("45");
     ui->lOblVal->setText("1");
+    ui->dVal->setValidator(new QDoubleValidator());
+    ui->dVal->setText("1");
+
+    ui->xPosVal->setText("0");
+    ui->yPosVal->setText("0");
+    ui->zPosVal->setText("0");
 
     setFixedSize(width(), height());
     m_coordSysCenter.SetX(ui->outputWidget->width() / 2);
@@ -58,6 +60,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->setButton, SIGNAL(clicked()), this, SLOT(setOperationPoint()));
     connect(ui->axonometricButton, SIGNAL(clicked()), this, SLOT(setAxonometricProjection()));
     connect(ui->obliqueButton, SIGNAL(clicked()), this, SLOT(setObliqueProjection()));
+    connect(ui->perspectiveButton, SIGNAL(clicked()), this, SLOT(setPerspectiveProjection()));
+
+    connect(m_renderObject, &RenderObject::PositionChanged, this, &MainWindow::onObjectPositionChanged);
 }
 
 MainWindow::~MainWindow()
@@ -67,7 +72,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::generateObject()
 {
-    static_cast<Thorus*>(m_renderObject)->Construct(ui->nVal->value(), ui->mVal->value(), ui->RVal->value(), ui->rVal->value());
+    Thorus* thorus = static_cast<Thorus*>(m_renderObject);
+    thorus->Construct(ui->nVal->value(), ui->mVal->value(), ui->RVal->value(), ui->rVal->value());
     ui->outputWidget->update();
 }
 
@@ -128,12 +134,26 @@ void MainWindow::setObliqueProjection()
     ui->outputWidget->update();
 }
 
+void MainWindow::setPerspectiveProjection()
+{
+    delete m_projection;
+    m_projection = new PerspectiveProjection(ui->dVal->text().toFloat());
+    ui->outputWidget->update();
+}
+
 void MainWindow::setOperationPoint()
 {
     m_operationPoint.SetX(ui->opXVal->text().toFloat());
     m_operationPoint.SetY(ui->opYVal->text().toFloat());
     m_operationPoint.SetZ(ui->opZVal->text().toFloat());
     ui->outputWidget->update();
+}
+
+void MainWindow::onObjectPositionChanged(Vector3D position)
+{
+    ui->xPosVal->setText(QString::number(static_cast<double>(position.GetX())));
+    ui->yPosVal->setText(QString::number(static_cast<double>(position.GetY())));
+    ui->zPosVal->setText(QString::number(static_cast<double>(position.GetZ())));
 }
 
 bool MainWindow::eventFilter(QObject* object, QEvent* event)

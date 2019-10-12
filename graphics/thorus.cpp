@@ -8,6 +8,7 @@ Thorus::Thorus() {}
 void Thorus::Construct(const int &n, const int &m, const int &R, const int &r)
 {
     GetMesh().Clear();
+    SetPosition(Vector3D(0.0f,0.0f,0.0f));
 
     float RStep = 360.0f / m;
     float rStep = 360.0f / n;
@@ -68,4 +69,6 @@ void Thorus::Construct(const int &n, const int &m, const int &R, const int &r)
             GetMesh().AddEdge(edge);
         }
     }
+
+    emit PositionChanged(GetPosition());
 }

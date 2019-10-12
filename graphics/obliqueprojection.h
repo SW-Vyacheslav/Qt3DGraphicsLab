@@ -1,10 +1,10 @@
 #ifndef OBLIQUEPROJECTION_H
 #define OBLIQUEPROJECTION_H
 
-#include "projection.h"
+#include "iprojection.h"
 #include "math/Matrix4x4.h"
 
-class ObliqueProjection : public Projection
+class ObliqueProjection : public IProjection
 {
 public:
     ObliqueProjection(const float& alpha, const float& l);

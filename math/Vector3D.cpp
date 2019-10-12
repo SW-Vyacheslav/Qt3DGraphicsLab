@@ -43,15 +43,43 @@ float Vector3D::GetLength() const
 {
     return sqrtf((x*x) + (y*y) + (z*z));
 }
-Vector3D Vector3D::Normalize() const
+
+Vector3D Vector3D::GetNormalized() const
 {
     Vector3D ret_val;
     float len = GetLength();
-    if (len == 0) return ret_val;
+    if (len == 0.0f) return ret_val;
     ret_val.x = x / len;
     ret_val.y = y / len;
     ret_val.z = z / len;
     return ret_val;
+}
+
+void Vector3D::Normalize()
+{
+    float len = GetLength();
+    if (len == 0.0f) return;
+    x /= len;
+    y /= len;
+    z /= len;
+}
+
+Vector3D Vector3D::GetCartesian() const
+{
+    Vector3D val;
+    val.SetX(x / w);
+    val.SetY(y / w);
+    val.SetZ(z / w);
+    val.SetW(1.0f);
+    return  val;
+}
+
+void Vector3D::ToCartesian()
+{
+    x /= w;
+    y /= w;
+    z /= w;
+    w = 1;
 }
 
 float Vector3D::DotProduct(const Vector3D& vec1, const Vector3D& vec2)

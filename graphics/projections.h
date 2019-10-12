@@ -1,0 +1,6 @@
+#include "axonometricprojection.h"
+#include "obliqueprojection.h"
+#include "perspectiveprojection.h"
+#include "frontalprojection.h"
+#include "profileprojection.h"
+#include "horizontalprojection.h"

@@ -3,7 +3,7 @@
 #include "math/Converter.h"
 #include <math.h>
 
-RenderObject::RenderObject()
+RenderObject::RenderObject(QObject* parent) : QObject(parent)
 {
     m_translateMat.SetElementAt(0, 0, 1.0f);
     m_translateMat.SetElementAt(1, 1, 1.0f);
@@ -35,6 +35,9 @@ void RenderObject::Translate(const float& x, const float& y, const float& z)
         Vertex& temp = m_mesh.GetVertex(i);
         temp.SetPosition(temp.GetPosition() * m_translateMat);
     }
+
+    m_position *= m_translateMat;
+    emit PositionChanged(m_position);
 }
 
 void RenderObject::Scale(const float& x, const float& y, const float& z)
@@ -48,6 +51,9 @@ void RenderObject::Scale(const float& x, const float& y, const float& z)
         Vertex& temp = m_mesh.GetVertex(i);
         temp.SetPosition(temp.GetPosition() * m_scaleMat);
     }
+
+    m_position *= m_scaleMat;
+    emit PositionChanged(m_position);
 }
 
 void RenderObject::Rotate(const float &x, const float &y, const float &z)
@@ -69,6 +75,9 @@ void RenderObject::RotateByXAxis(const float& angle)
         Vertex& temp = m_mesh.GetVertex(i);
         temp.SetPosition(temp.GetPosition() * m_rotXMat);
     }
+
+    m_position *= m_rotXMat;
+    emit PositionChanged(m_position);
 }
 
 void RenderObject::RotateByYAxis(const float& angle)
@@ -83,6 +92,9 @@ void RenderObject::RotateByYAxis(const float& angle)
         Vertex& temp = m_mesh.GetVertex(i);
         temp.SetPosition(temp.GetPosition() * m_rotYMat);
     }
+
+    m_position *= m_rotYMat;
+    emit PositionChanged(m_position);
 }
 
 void RenderObject::RotateByZAxis(const float& angle)
@@ -97,9 +109,29 @@ void RenderObject::RotateByZAxis(const float& angle)
         Vertex& temp = m_mesh.GetVertex(i);
         temp.SetPosition(temp.GetPosition() * m_rotZMat);
     }
+
+    m_position *= m_rotZMat;
+    emit PositionChanged(m_position);
 }
 
 Mesh& RenderObject::GetMesh()
 {
     return m_mesh;
+}
+
+Vector3D RenderObject::GetPosition() const
+{
+    return m_position;
+}
+
+void RenderObject::SetPosition(const Vector3D &position)
+{
+    m_position = position;
+}
+
+void RenderObject::SetPosition(const float &x, const float &y, const float &z)
+{
+    m_position.SetX(x);
+    m_position.SetY(y);
+    m_position.SetZ(z);
 }

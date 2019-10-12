@@ -10,8 +10,8 @@ QList<Point> ProfileProjection::GetProjectionPoints(const QList<Vertex> &vertice
     for (int i = 0; i < vertices.length(); i++)
     {
         Point point;
-        point.x = vertices[i].GetPosition().GetY();
-        point.y = vertices[i].GetPosition().GetZ();
+        point.x = vertices[i].GetPosition().GetZ();
+        point.y = vertices[i].GetPosition().GetY();
         val.push_back(point);
     }
     return val;

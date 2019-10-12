@@ -1,9 +1,9 @@
 #ifndef PROFILEPROJECTION_H
 #define PROFILEPROJECTION_H
 
-#include "projection.h"
+#include "iprojection.h"
 
-class ProfileProjection : public Projection
+class ProfileProjection : public IProjection
 {
 public:
     ProfileProjection();
