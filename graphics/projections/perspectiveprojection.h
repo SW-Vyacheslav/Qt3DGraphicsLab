@@ -1,10 +1,10 @@
 #ifndef PERSPECTIVEPROJECTION_H
 #define PERSPECTIVEPROJECTION_H
 
-#include "iprojection.h"
+#include "graphics/projections/projection.h"
 #include "math/Matrix4x4.h"
 
-class PerspectiveProjection : public IProjection
+class PerspectiveProjection : public Projection
 {
 public:
     PerspectiveProjection(const float& d);

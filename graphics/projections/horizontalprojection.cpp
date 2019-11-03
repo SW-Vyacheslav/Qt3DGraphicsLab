@@ -1,4 +1,4 @@
-#include "horizontalprojection.h"
+#include "graphics/projections/horizontalprojection.h"
 
 HorizontalProjection::HorizontalProjection() {}
 

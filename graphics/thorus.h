@@ -1,9 +1,9 @@
 #ifndef THORUS_H
 #define THORUS_H
 
-#include "graphics/renderobject.h"
+#include "graphics/components/worldobject.h"
 
-class Thorus : public RenderObject
+class Thorus : public WorldObject
 {
 public:
     Thorus();

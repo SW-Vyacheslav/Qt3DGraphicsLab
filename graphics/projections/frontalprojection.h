@@ -1,9 +1,9 @@
 #ifndef FRONTALPROJECTION_H
 #define FRONTALPROJECTION_H
 
-#include "iprojection.h"
+#include "graphics/projections/projection.h"
 
-class FrontalProjection : public IProjection
+class FrontalProjection : public Projection
 {
 public:
     FrontalProjection();

@@ -1,10 +1,10 @@
 #ifndef AXONOMETRICPROJECTION_H
 #define AXONOMETRICPROJECTION_H
 
-#include "iprojection.h"
+#include "graphics/projections/projection.h"
 #include "math/Matrix4x4.h"
 
-class AxonometricProjection : public IProjection
+class AxonometricProjection : public Projection
 {
 public:
     AxonometricProjection(const float& alphaAngle, const float& betaAngle);

@@ -15,7 +15,7 @@ public:
     void operator*=(const Matrix4x4& mat);
 
 private:
-    float grid[4][4];
+    float m_elements[16];
 };
 
 #endif

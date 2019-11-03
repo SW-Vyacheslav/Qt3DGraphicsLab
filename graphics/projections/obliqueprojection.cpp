@@ -1,4 +1,4 @@
-#include "obliqueprojection.h"
+#include "graphics/projections/obliqueprojection.h"
 #include "math/Converter.h"
 #include <math.h>
 

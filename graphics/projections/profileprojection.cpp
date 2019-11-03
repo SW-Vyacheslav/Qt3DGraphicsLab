@@ -1,4 +1,4 @@
-#include "profileprojection.h"
+#include "graphics/projections/profileprojection.h"
 
 ProfileProjection::ProfileProjection() {}
 

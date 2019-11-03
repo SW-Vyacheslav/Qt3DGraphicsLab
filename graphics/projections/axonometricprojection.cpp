@@ -1,4 +1,4 @@
-#include "axonometricprojection.h"
+#include "graphics/projections/axonometricprojection.h"
 #include "math/Converter.h"
 #include <math.h>
 

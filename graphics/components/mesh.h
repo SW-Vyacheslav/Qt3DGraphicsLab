@@ -2,17 +2,9 @@
 #define MESH_H
 
 #include <QList>
-#include "vertex.h"
-
-struct Face
-{
-    int vertexIndexes[3] = {};
-};
-
-struct Edge
-{
-    int vertexIndexes[2] = {};
-};
+#include "graphics/components/vertex.h"
+#include "graphics/components/edge.h"
+#include "graphics/components/face.h"
 
 class Mesh
 {

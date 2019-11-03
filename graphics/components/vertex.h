@@ -2,7 +2,7 @@
 #define VERTEX_H
 
 #include "math/Vector3D.h"
-#include "point.h"
+#include "graphics/components/point.h"
 
 class Vertex
 {

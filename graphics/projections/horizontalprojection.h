@@ -1,9 +1,9 @@
 #ifndef HORIZONTALPROJECTION_H
 #define HORIZONTALPROJECTION_H
 
-#include "iprojection.h"
+#include "graphics/projections/projection.h"
 
-class HorizontalProjection : public IProjection
+class HorizontalProjection : public Projection
 {
 public:
     HorizontalProjection();

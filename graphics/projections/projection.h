@@ -2,13 +2,13 @@
 #define PROJECTION_H
 
 #include <QList>
-#include "point.h"
-#include "vertex.h"
+#include "graphics/components/point.h"
+#include "graphics/components/vertex.h"
 
-class IProjection
+class Projection
 {
 public:
-    virtual ~IProjection();
+    virtual ~Projection();
 
     virtual QList<Point> GetProjectionPoints(const QList<Vertex>& vertices) = 0;
 };

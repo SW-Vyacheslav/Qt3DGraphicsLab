@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 #include <QPainter>
-#include "graphics/renderobject.h"
-#include "graphics/iprojection.h"
-#include "graphics/point.h"
+#include "graphics/components/worldobject.h"
+#include "graphics/projections/projection.h"
+#include "graphics/components/point.h"
 
 namespace Ui {
 class MainWindow;
@@ -36,14 +36,15 @@ public slots:
     void setObliqueProjection();
     void setPerspectiveProjection();
     void setOperationPoint();
-    void onObjectPositionChanged(Vector3D position);
+    void onObjectPositionChanged(const Vector3D& position);
+    void updateWidgetOnChange();
 
 private:
     Ui::MainWindow *ui;
-    RenderObject* m_renderObject;
+    WorldObject* m_renderObject;
     Vector3D m_coordSysCenter;
     Vector3D m_operationPoint;
-    IProjection* m_projection;
+    Projection* m_projection;
 };
 
 #endif // MAINWINDOW_H

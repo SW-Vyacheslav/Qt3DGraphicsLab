@@ -1,13 +1,13 @@
 #include "Matrix4x4.h"
 
-Matrix4x4::Matrix4x4() : grid{0.0f} {}
+Matrix4x4::Matrix4x4() : m_elements{0.0f} {}
 Matrix4x4::Matrix4x4(const Matrix4x4& mat)
 {
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
         {
-            grid[i][j] = mat.grid[i][j];
+            SetElementAt(i, j, mat.GetElementAt(i, j));
         }
     }
 }
@@ -18,14 +18,14 @@ void Matrix4x4::SetElementAt(const int& row, const int& column, const float& val
     if (row < 0 || row > 3) throw "Out of matrix row range";
     if (column < 0 || column > 3) throw "Out of matrix column range";
 
-    grid[row][column] = val;
+    m_elements[(row << 2) + column] = val;
 }
 float Matrix4x4::GetElementAt(const int& row, const int& column) const
 {
     if (row < 0 || row > 3) throw "Out of matrix row range";
     if (column < 0 || column > 3) throw "Out of matrix column range";
 
-    return grid[row][column];
+    return m_elements[(row << 2) + column];
 }
 
 Matrix4x4 Matrix4x4::operator*(const Matrix4x4& mat)

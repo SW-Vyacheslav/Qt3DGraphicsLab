@@ -1,6 +1,6 @@
-#include "thorus.h"
-#include "mesh.h"
-#include "vertex.h"
+#include "graphics/thorus.h"
+#include "graphics/components/mesh.h"
+#include "graphics/components/vertex.h"
 #include "math/Converter.h"
 
 Thorus::Thorus() {}
@@ -8,7 +8,6 @@ Thorus::Thorus() {}
 void Thorus::Construct(const int &n, const int &m, const int &R, const int &r)
 {
     GetMesh().Clear();
-    SetPosition(Vector3D(0.0f,0.0f,0.0f));
 
     float RStep = 360.0f / m;
     float rStep = 360.0f / n;
@@ -69,6 +68,4 @@ void Thorus::Construct(const int &n, const int &m, const int &R, const int &r)
             GetMesh().AddEdge(edge);
         }
     }
-
-    emit PositionChanged(GetPosition());
 }

@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "graphics/vertex.h"
-#include "graphics/mesh.h"
 #include "graphics/thorus.h"
 #include "graphics/projections.h"
 
@@ -62,7 +60,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->obliqueButton, SIGNAL(clicked()), this, SLOT(setObliqueProjection()));
     connect(ui->perspectiveButton, SIGNAL(clicked()), this, SLOT(setPerspectiveProjection()));
 
-    connect(m_renderObject, &RenderObject::PositionChanged, this, &MainWindow::onObjectPositionChanged);
+    connect(ui->verticesCheckBox, &QCheckBox::clicked, this, &MainWindow::updateWidgetOnChange);
+    connect(ui->edgesCheckBox, &QCheckBox::clicked, this, &MainWindow::updateWidgetOnChange);
+    connect(ui->facesCheckBox, &QCheckBox::clicked, this, &MainWindow::updateWidgetOnChange);
+    connect(&(m_renderObject->GetTransform()), &Transform::OnPositionChanged, this, &MainWindow::onObjectPositionChanged);
 }
 
 MainWindow::~MainWindow()
@@ -79,23 +80,23 @@ void MainWindow::generateObject()
 
 void MainWindow::translateObject()
 {
-    m_renderObject->Translate(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
+    m_renderObject->GetTransform().Translate(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
     ui->outputWidget->update();
 }
 
 void MainWindow::scaleObject()
 {
-    m_renderObject->Translate(-m_operationPoint.GetX(), -m_operationPoint.GetY(), -m_operationPoint.GetZ());
-    m_renderObject->Scale(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
-    m_renderObject->Translate(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
+    m_renderObject->GetTransform().Translate(-m_operationPoint.GetX(), -m_operationPoint.GetY(), -m_operationPoint.GetZ());
+    m_renderObject->GetTransform().Scale(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
+    m_renderObject->GetTransform().Translate(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
     ui->outputWidget->update();
 }
 
 void MainWindow::rotateObject()
 {
-    m_renderObject->Translate(-m_operationPoint.GetX(), -m_operationPoint.GetY(), -m_operationPoint.GetZ());
-    m_renderObject->Rotate(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
-    m_renderObject->Translate(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
+    m_renderObject->GetTransform().Translate(-m_operationPoint.GetX(), -m_operationPoint.GetY(), -m_operationPoint.GetZ());
+    m_renderObject->GetTransform().Rotate(ui->xVal->text().toFloat(), ui->yVal->text().toFloat(), ui->zVal->text().toFloat());
+    m_renderObject->GetTransform().Translate(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());
     ui->outputWidget->update();
 }
 
@@ -149,11 +150,16 @@ void MainWindow::setOperationPoint()
     ui->outputWidget->update();
 }
 
-void MainWindow::onObjectPositionChanged(Vector3D position)
+void MainWindow::onObjectPositionChanged(const Vector3D& position)
 {
     ui->xPosVal->setText(QString::number(static_cast<double>(position.GetX())));
     ui->yPosVal->setText(QString::number(static_cast<double>(position.GetY())));
     ui->zPosVal->setText(QString::number(static_cast<double>(position.GetZ())));
+}
+
+void MainWindow::updateWidgetOnChange()
+{
+    ui->outputWidget->update();
 }
 
 bool MainWindow::eventFilter(QObject* object, QEvent* event)
@@ -175,21 +181,27 @@ void MainWindow::drawObject(QPainter& painter)
     Mesh& objMesh = m_renderObject->GetMesh();
     QList<Point> points = PointsToCoordSystem(m_projection->GetProjectionPoints(objMesh.GetVertices()));
     painter.fillRect(0, 0, width(), height(), Qt::black);
-    painter.setPen(Qt::white);
-    for (int i = 0; i < objMesh.GetEdgesNum(); i++)
+    if (ui->edgesCheckBox->isChecked())
     {
-        Edge& edge = objMesh.GetEdge(i);
-        painter.drawLine(
-                    static_cast<int>(points[edge.vertexIndexes[0]].x),
-                    static_cast<int>(points[edge.vertexIndexes[0]].y),
-                    static_cast<int>(points[edge.vertexIndexes[1]].x),
-                    static_cast<int>(points[edge.vertexIndexes[1]].y));
+        painter.setPen(Qt::white);
+        for (int i = 0; i < objMesh.GetEdgesNum(); i++)
+        {
+            Edge& edge = objMesh.GetEdge(i);
+            painter.drawLine(
+                        static_cast<int>(points[edge.vertexIndexes[0]].x),
+                        static_cast<int>(points[edge.vertexIndexes[0]].y),
+                        static_cast<int>(points[edge.vertexIndexes[1]].x),
+                        static_cast<int>(points[edge.vertexIndexes[1]].y));
+        }
     }
-    painter.setPen(Qt::red);
-    painter.setBrush(Qt::red);
-    for (int i = 0; i < points.length(); i++)
+    if (ui->verticesCheckBox->isChecked())
     {
-        painter.drawRect(static_cast<int>(points[i].x) - 1, static_cast<int>(points[i].y) - 1, 2, 2);
+        painter.setPen(Qt::red);
+        painter.setBrush(Qt::red);
+        for (int i = 0; i < points.length(); i++)
+        {
+            painter.drawRect(static_cast<int>(points[i].x) - 1, static_cast<int>(points[i].y) - 1, 2, 2);
+        }
     }
     Vertex opCenter;
     opCenter.SetPosition(m_operationPoint.GetX(), m_operationPoint.GetY(), m_operationPoint.GetZ());

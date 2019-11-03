@@ -1,5 +1,4 @@
-#include "frontalprojection.h"
-#include "vertex.h"
+#include "graphics/projections/frontalprojection.h"
 
 FrontalProjection::FrontalProjection() {}
 

@@ -12,38 +12,48 @@ TARGET = QT3DGraphicsLab
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    graphics/axonometricprojection.cpp \
-    graphics/frontalprojection.cpp \
-    graphics/horizontalprojection.cpp \
-    graphics/iprojection.cpp \
-    graphics/obliqueprojection.cpp \
-    graphics/perspectiveprojection.cpp \
-    graphics/profileprojection.cpp \
-    graphics/thorus.cpp \
+    graphics/components/camera.cpp \
+    graphics/components/transformmatrixcreator.cpp \
+    graphics/components/worldobject.cpp \
     mainwindow.cpp \
-    graphics/mesh.cpp \
-    graphics/vertex.cpp \
-    graphics/renderobject.cpp \
+    graphics/components/mesh.cpp \
+    graphics/components/transform.cpp \
+    graphics/components/vertex.cpp \
+    graphics/projections/axonometricprojection.cpp \
+    graphics/projections/frontalprojection.cpp \
+    graphics/projections/horizontalprojection.cpp \
+    graphics/projections/obliqueprojection.cpp \
+    graphics/projections/perspectiveprojection.cpp \
+    graphics/projections/profileprojection.cpp \
+    graphics/projections/projection.cpp \
+    graphics/thorus.cpp \
     math/Converter.cpp \
     math/Matrix4x4.cpp \
-    math/Vector3D.cpp
+    math/Vector3D.cpp \
+    widgets/worldwidget.cpp
 
 HEADERS  += mainwindow.h \
-    graphics/axonometricprojection.h \
-    graphics/frontalprojection.h \
-    graphics/horizontalprojection.h \
-    graphics/iprojection.h \
-    graphics/mesh.h \
-    graphics/obliqueprojection.h \
-    graphics/perspectiveprojection.h \
-    graphics/point.h \
-    graphics/profileprojection.h \
-    graphics/projections.h \
-    graphics/renderobject.h \
+    graphics/components/camera.h \
+    graphics/components/edge.h \
+    graphics/components/face.h \
+    graphics/components/mesh.h \
+    graphics/components/point.h \
+    graphics/components/transform.h \
+    graphics/components/transformmatrixcreator.h \
+    graphics/components/vertex.h \
+    graphics/components/worldobject.h \
+    graphics/projections/axonometricprojection.h \
+    graphics/projections/frontalprojection.h \
+    graphics/projections/horizontalprojection.h \
+    graphics/projections/obliqueprojection.h \
+    graphics/projections/perspectiveprojection.h \
+    graphics/projections/profileprojection.h \
+    graphics/projections/projection.h \
     graphics/thorus.h \
-    graphics/vertex.h \
+    graphics/projections.h \
     math/Converter.h \
     math/Matrix4x4.h \
-    math/Vector3D.h
+    math/Vector3D.h \
+    widgets/worldwidget.h
 
 FORMS    += mainwindow.ui
