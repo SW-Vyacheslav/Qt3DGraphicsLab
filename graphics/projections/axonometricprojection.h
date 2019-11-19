@@ -10,7 +10,7 @@ public:
     AxonometricProjection(const float& alphaAngle, const float& betaAngle);
     ~AxonometricProjection() override;
 
-    QList<Point> GetProjectionPoints(const QList<Vertex> &vertices) override;
+    QList<Vertex> Project(const QList<Vertex> &vertices) override;
 
 private:
     Matrix4x4 m_projectionMatrix;

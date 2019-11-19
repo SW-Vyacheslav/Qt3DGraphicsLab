@@ -1,5 +1,5 @@
-#ifndef SWE_VECTOR3D
-#define SWE_VECTOR3D
+#ifndef VECTOR3D_H
+#define VECTOR3D_H
 
 #include "Matrix4x4.h"
 
@@ -9,7 +9,6 @@ public:
     Vector3D();
     Vector3D(const float& x, const float& y, const float& z);
     Vector3D(const Vector3D& vec);
-    ~Vector3D();
 
     void SetX(const float& x);
     void SetY(const float& y);

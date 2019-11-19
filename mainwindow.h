@@ -2,10 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QPainter>
-#include "graphics/components/worldobject.h"
-#include "graphics/projections/projection.h"
-#include "graphics/components/point.h"
+#include "widgets/worldwidget.h"
+#include "widgets/vector3dwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,11 +17,6 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private:
-    bool eventFilter(QObject* object, QEvent* event);
-    void drawObject(QPainter& painter);
-    QList<Point> PointsToCoordSystem(const QList<Point>& vertices);
-
 public slots:
     void generateObject();
     void translateObject();
@@ -35,16 +28,15 @@ public slots:
     void setAxonometricProjection();
     void setObliqueProjection();
     void setPerspectiveProjection();
-    void setOperationPoint();
-    void onObjectPositionChanged(const Vector3D& position);
-    void updateWidgetOnChange();
+    void vc(int a);
 
 private:
     Ui::MainWindow *ui;
-    WorldObject* m_renderObject;
-    Vector3D m_coordSysCenter;
-    Vector3D m_operationPoint;
-    Projection* m_projection;
+    WorldWidget* m_worldWidget;
+    Vector3DWidget* m_opPosWidg;
+    Vector3DWidget* m_translateWidg;
+    Vector3DWidget* m_rotateWidg;
+    Vector3DWidget* m_scaleWidg;
 };
 
 #endif // MAINWINDOW_H

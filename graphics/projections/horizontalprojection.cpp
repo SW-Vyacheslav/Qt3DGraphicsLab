@@ -2,17 +2,16 @@
 
 HorizontalProjection::HorizontalProjection() {}
 
-HorizontalProjection::~HorizontalProjection() {}
-
-QList<Point> HorizontalProjection::GetProjectionPoints(const QList<Vertex>& vertices)
+QList<Vertex> HorizontalProjection::Project(const QList<Vertex>& vertices)
 {
-    QList<Point> val;
+    QList<Vertex> val;
     for (int i = 0; i < vertices.length(); i++)
     {
-        Point point;
-        point.x = vertices[i].GetPosition().GetX();
-        point.y = vertices[i].GetPosition().GetZ();
-        val.push_back(point);
+        Vertex vert;
+        vert.SetPosition(vertices[i].GetPosition().GetX(),
+                         vertices[i].GetPosition().GetZ(),
+                         vertices[i].GetPosition().GetY());
+        val.push_back(vert);
     }
     return val;
 }

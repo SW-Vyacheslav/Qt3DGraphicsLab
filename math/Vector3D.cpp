@@ -4,36 +4,42 @@
 Vector3D::Vector3D() : x(0.0f), y(0.0f), z(0.0f), w(1.0f) {}
 Vector3D::Vector3D(const float& x, const float& y, const float& z) : x(x), y(y), z(z), w(1.0f) {}
 Vector3D::Vector3D(const Vector3D& vec) : x(vec.x), y(vec.y), z(vec.z), w(vec.w) {}
-Vector3D::~Vector3D() {}
 
 void Vector3D::SetX(const float& x)
 {
     this->x = x;
 }
+
 void Vector3D::SetY(const float& y)
 {
     this->y = y;
 }
+
 void Vector3D::SetZ(const float& z)
 {
     this->z = z;
 }
+
 void Vector3D::SetW(const float& w)
 {
     this->w = w;
 }
+
 float Vector3D::GetX() const
 {
     return x;
 }
+
 float Vector3D::GetY() const
 {
     return y;
 }
+
 float Vector3D::GetZ() const
 {
     return z;
 }
+
 float Vector3D::GetW() const
 {
     return w;
@@ -86,6 +92,7 @@ float Vector3D::DotProduct(const Vector3D& vec1, const Vector3D& vec2)
 {
     return vec1.x*vec2.x + vec1.y*vec2.y + vec1.z*vec2.z;
 }
+
 Vector3D Vector3D::CrossProduct(const Vector3D& vec1, const Vector3D& vec2)
 {
     Vector3D ret_val;
@@ -103,12 +110,14 @@ Vector3D Vector3D::operator+(const Vector3D& vec)
     ret_val.z = z + vec.z;
     return ret_val;
 }
+
 void Vector3D::operator+=(const Vector3D& vec)
 {
     x += vec.x;
     y += vec.y;
     z += vec.z;
 }
+
 Vector3D Vector3D::operator-(const Vector3D& vec)
 {
     Vector3D ret_val;
@@ -117,12 +126,14 @@ Vector3D Vector3D::operator-(const Vector3D& vec)
     ret_val.z = z - vec.z;
     return ret_val;
 }
+
 void Vector3D::operator-=(const Vector3D& vec)
 {
     x -= vec.x;
     y -= vec.y;
     z -= vec.z;
 }
+
 Vector3D Vector3D::operator*(const float& num)
 {
     Vector3D ret_val;
@@ -131,12 +142,14 @@ Vector3D Vector3D::operator*(const float& num)
     ret_val.z = z * num;
     return ret_val;
 }
+
 void Vector3D::operator*=(const float& num)
 {
     x *= num;
     y *= num;
     z *= num;
 }
+
 Vector3D Vector3D::operator*(const Matrix4x4& mat)
 {
     Vector3D ret_val;
@@ -146,6 +159,7 @@ Vector3D Vector3D::operator*(const Matrix4x4& mat)
     ret_val.w = x * mat.GetElementAt(0, 3) + y * mat.GetElementAt(1, 3) + z * mat.GetElementAt(2, 3) + w * mat.GetElementAt(3, 3);
     return ret_val;
 }
+
 void Vector3D::operator*=(const Matrix4x4& mat)
 {
     Vector3D temp = *this;

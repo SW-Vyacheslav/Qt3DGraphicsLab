@@ -8,9 +8,8 @@ class ObliqueProjection : public Projection
 {
 public:
     ObliqueProjection(const float& alpha, const float& l);
-    ~ObliqueProjection() override;
 
-    QList<Point> GetProjectionPoints(const QList<Vertex> &vertices) override;
+    QList<Vertex> Project(const QList<Vertex> &vertices) override;
 
 private:
     Matrix4x4 m_projectionMatrix;

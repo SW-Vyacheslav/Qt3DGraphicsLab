@@ -11,7 +11,6 @@ Matrix4x4::Matrix4x4(const Matrix4x4& mat)
         }
     }
 }
-Matrix4x4::~Matrix4x4() {}
 
 void Matrix4x4::SetElementAt(const int& row, const int& column, const float& val)
 {
@@ -20,12 +19,23 @@ void Matrix4x4::SetElementAt(const int& row, const int& column, const float& val
 
     m_elements[(row << 2) + column] = val;
 }
+
 float Matrix4x4::GetElementAt(const int& row, const int& column) const
 {
     if (row < 0 || row > 3) throw "Out of matrix row range";
     if (column < 0 || column > 3) throw "Out of matrix column range";
 
     return m_elements[(row << 2) + column];
+}
+
+Matrix4x4 Matrix4x4::CreateIdentityMatrix()
+{
+    Matrix4x4 mat;
+    mat.SetElementAt(0, 0, 1.0f);
+    mat.SetElementAt(1, 1, 1.0f);
+    mat.SetElementAt(2, 2, 1.0f);
+    mat.SetElementAt(3, 3, 1.0f);
+    return mat;
 }
 
 Matrix4x4 Matrix4x4::operator*(const Matrix4x4& mat)
@@ -46,6 +56,7 @@ Matrix4x4 Matrix4x4::operator*(const Matrix4x4& mat)
     }
     return ret_val;
 }
+
 void Matrix4x4::operator*=(const Matrix4x4& mat)
 {
     Matrix4x4 temp = *this;

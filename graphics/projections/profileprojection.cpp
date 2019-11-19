@@ -2,17 +2,16 @@
 
 ProfileProjection::ProfileProjection() {}
 
-ProfileProjection::~ProfileProjection() {}
-
-QList<Point> ProfileProjection::GetProjectionPoints(const QList<Vertex> &vertices)
+QList<Vertex> ProfileProjection::Project(const QList<Vertex> &vertices)
 {
-    QList<Point> val;
+    QList<Vertex> val;
     for (int i = 0; i < vertices.length(); i++)
     {
-        Point point;
-        point.x = vertices[i].GetPosition().GetZ();
-        point.y = vertices[i].GetPosition().GetY();
-        val.push_back(point);
+        Vertex vert;
+        vert.SetPosition(vertices[i].GetPosition().GetZ(),
+                         vertices[i].GetPosition().GetY(),
+                         vertices[i].GetPosition().GetX());
+        val.push_back(vert);
     }
     return val;
 }

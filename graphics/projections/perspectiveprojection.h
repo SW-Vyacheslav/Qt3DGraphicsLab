@@ -9,7 +9,7 @@ class PerspectiveProjection : public Projection
 public:
     PerspectiveProjection(const float& d);
 
-    QList<Point> GetProjectionPoints(const QList<Vertex> &vertices) override;
+    QList<Vertex> Project(const QList<Vertex> &vertices) override;
 
 private:
     Matrix4x4 m_projectionMatrix;

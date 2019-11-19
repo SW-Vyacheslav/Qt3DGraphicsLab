@@ -7,9 +7,8 @@ class HorizontalProjection : public Projection
 {
 public:
     HorizontalProjection();
-    ~HorizontalProjection() override;
 
-    QList<Point> GetProjectionPoints(const QList<Vertex>& vertices) override;
+    QList<Vertex> Project(const QList<Vertex> &vertices) override;
 };
 
 #endif // HORIZONTALPROJECTION_H

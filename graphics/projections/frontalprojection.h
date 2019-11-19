@@ -9,7 +9,7 @@ public:
     FrontalProjection();
     ~FrontalProjection() override;
 
-    QList<Point> GetProjectionPoints(const QList<Vertex>& vertices) override;
+    QList<Vertex> Project(const QList<Vertex> &vertices) override;
 };
 
 #endif // FRONTALPROJECTION_H

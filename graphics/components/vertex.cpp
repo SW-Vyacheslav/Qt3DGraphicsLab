@@ -2,6 +2,12 @@
 
 Vertex::Vertex(){}
 
+Vertex::Vertex(const Vertex &vertex)
+{
+    m_position = vertex.m_position;
+    m_uv = vertex.m_uv;
+}
+
 void Vertex::SetPosition(const Vector3D& position)
 {
     m_position = position;
@@ -14,21 +20,15 @@ void Vertex::SetPosition(const float &x, const float &y, const float &z)
     m_position.SetZ(z);
 }
 
-void Vertex::SetNormal(const Vector3D& normal)
-{
-    m_normal = normal;
-}
-
-void Vertex::SetNormal(const float &x, const float &y, const float &z)
-{
-    m_normal.SetX(x);
-    m_normal.SetY(y);
-    m_normal.SetZ(z);
-}
-
-void Vertex::SetUV(const Point& uv)
+void Vertex::SetUV(const Vector2D& uv)
 {
     m_uv = uv;
+}
+
+void Vertex::SetUV(const float &u, const float &v)
+{
+    m_uv.SetX(u);
+    m_uv.SetY(v);
 }
 
 Vector3D Vertex::GetPosition() const
@@ -36,12 +36,7 @@ Vector3D Vertex::GetPosition() const
     return m_position;
 }
 
-Vector3D Vertex::GetNormal() const
-{
-    return m_normal;
-}
-
-Point Vertex::GetUV() const
+Vector2D Vertex::GetUV() const
 {
     return m_uv;
 }

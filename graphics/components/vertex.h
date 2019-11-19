@@ -2,28 +2,25 @@
 #define VERTEX_H
 
 #include "math/Vector3D.h"
-#include "graphics/components/point.h"
+#include "math/Vector2D.h"
 
 class Vertex
 {
 public:
     Vertex();
+    Vertex(const Vertex& vertex);
 
     void SetPosition(const Vector3D& position);
     void SetPosition(const float& x, const float& y, const float& z);
-    void SetNormal(const Vector3D& normal);
-    void SetNormal(const float& x, const float& y, const float& z);
-    void SetUV(const Point& uv);
-    void SetUV(const float& x, const float& y);
+    void SetUV(const Vector2D& uv);
+    void SetUV(const float& u, const float& v);
 
     Vector3D GetPosition() const;
-    Vector3D GetNormal() const;
-    Point GetUV() const;
+    Vector2D GetUV() const;
 
 private:
     Vector3D m_position;
-    Vector3D m_normal;
-    Point m_uv;
+    Vector2D m_uv;
 };
 
 #endif // VERTEX_H

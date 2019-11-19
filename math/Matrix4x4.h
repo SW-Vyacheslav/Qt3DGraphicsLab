@@ -1,15 +1,16 @@
-#ifndef SWE_MATRIX4X4
-#define SWE_MATRIX4X4
+#ifndef MATRIX4X4_H
+#define MATRIX4X4_H
 
 class Matrix4x4
 {
 public:
     Matrix4x4();
     Matrix4x4(const Matrix4x4& mat);
-    ~Matrix4x4();
 
     void SetElementAt(const int& row, const int& column, const float& val);
     float GetElementAt(const int& row, const int& column) const;
+
+    static Matrix4x4 CreateIdentityMatrix();
 
     Matrix4x4 operator*(const Matrix4x4& mat);
     void operator*=(const Matrix4x4& mat);

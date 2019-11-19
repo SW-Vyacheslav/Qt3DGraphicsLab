@@ -12,31 +12,31 @@ public:
     Mesh();
 
     void AddVertex(const Vertex& vertex);
-    void RemoveVertex(const int& index);
-
     void AddEdge(const Edge& edge);
-    void RemoveEdge(const int& index);
-
     void AddFace(const Face& face);
+
+    void RemoveVertex(const int& index);
+    void RemoveEdge(const int& index);
     void RemoveFace(const int& index);
 
     void Clear();
 
     QList<Vertex> GetVertices() const;
+    QList<Edge> GetEdges() const;
+    QList<Face> GetFaces() const;
 
     Vertex& GetVertex(const int& index);
-    int GetVerticesNum() const;
-
     Edge& GetEdge(const int& index);
-    int GetEdgesNum() const;
-
     Face& GetFace(const int& index);
+
+    int GetVerticesNum() const;
+    int GetEdgesNum() const;
     int GetFacesNum() const;
 
 private:
     QList<Vertex> m_vertices;
-    QList<Face> m_faces;
     QList<Edge> m_edges;
+    QList<Face> m_faces;
 };
 
 #endif // MESH_H

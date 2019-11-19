@@ -1,7 +1,7 @@
 #include "graphics/components/transform.h"
 #include "transformmatrixcreator.h"
 
-Transform::Transform() : QObject(nullptr)
+Transform::Transform() : QObject(nullptr), m_scale(1.0f, 1.0f, 1.0f), m_pivot(CENTER)
 {
 
 }
@@ -45,6 +45,11 @@ Vector3D Transform::GetScale() const
     return m_scale;
 }
 
+Transform::Pivot Transform::GetPivot() const
+{
+    return m_pivot;
+}
+
 Vector3D Transform::GetOpPosition() const
 {
     return m_opPosition;
@@ -52,26 +57,14 @@ Vector3D Transform::GetOpPosition() const
 
 void Transform::SetPivot(Transform::Pivot pivot)
 {
-    m_isUsePivot = true;
     m_pivot = pivot;
     emit OnPivotChanged(m_pivot);
 }
 
 void Transform::SetOpPosition(const Vector3D &position)
 {
-    m_isUsePivot = false;
     m_opPosition = position;
     emit OnOpPositionChanged(m_opPosition);
-}
-
-bool Transform::IsPivotUsed()
-{
-    return m_isUsePivot;
-}
-
-Transform::Pivot Transform::GetPivot() const
-{
-    return m_pivot;
 }
 
 void Transform::SetPosition(const Vector3D &position)

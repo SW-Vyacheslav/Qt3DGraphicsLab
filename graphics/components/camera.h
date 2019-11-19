@@ -10,11 +10,8 @@ class Camera : public QObject
 public:
     Camera();
 
-signals:
-
-public slots:
-
 private:
+
 };
 
 #endif // CAMERA_H

@@ -29,7 +29,10 @@ SOURCES += main.cpp \
     graphics/thorus.cpp \
     math/Converter.cpp \
     math/Matrix4x4.cpp \
+    math/Vector2D.cpp \
     math/Vector3D.cpp \
+    widgets/transformwidget.cpp \
+    widgets/vector3dwidget.cpp \
     widgets/worldwidget.cpp
 
 HEADERS  += mainwindow.h \
@@ -37,7 +40,6 @@ HEADERS  += mainwindow.h \
     graphics/components/edge.h \
     graphics/components/face.h \
     graphics/components/mesh.h \
-    graphics/components/point.h \
     graphics/components/transform.h \
     graphics/components/transformmatrixcreator.h \
     graphics/components/vertex.h \
@@ -53,7 +55,10 @@ HEADERS  += mainwindow.h \
     graphics/projections.h \
     math/Converter.h \
     math/Matrix4x4.h \
+    math/Vector2D.h \
     math/Vector3D.h \
+    widgets/transformwidget.h \
+    widgets/vector3dwidget.h \
     widgets/worldwidget.h
 
 FORMS    += mainwindow.ui

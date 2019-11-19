@@ -14,16 +14,15 @@ AxonometricProjection::AxonometricProjection(const float& alphaAngle, const floa
 
 AxonometricProjection::~AxonometricProjection() {}
 
-QList<Point> AxonometricProjection::GetProjectionPoints(const QList<Vertex> &vertices)
+QList<Vertex> AxonometricProjection::Project(const QList<Vertex> &vertices)
 {
-    QList<Point> val;
+    QList<Vertex> val;
     for (int i = 0; i < vertices.length(); i++)
     {
         Vector3D tempVec = vertices[i].GetPosition() * m_projectionMatrix;
-        Point point;
-        point.x = tempVec.GetX();
-        point.y = tempVec.GetY();
-        val.push_back(point);
+        Vertex vert;
+        vert.SetPosition(tempVec);
+        val.push_back(vert);
     }
     return val;
 }

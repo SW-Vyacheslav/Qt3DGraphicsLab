@@ -10,19 +10,18 @@ PerspectiveProjection::PerspectiveProjection(const float& d)
     else m_projectionMatrix.SetElementAt(2, 3, 1.0f / d);
 }
 
-QList<Point> PerspectiveProjection::GetProjectionPoints(const QList<Vertex> &vertices)
+QList<Vertex> PerspectiveProjection::Project(const QList<Vertex> &vertices)
 {
-    QList<Point> val;
+    QList<Vertex> val;
     for (int i = 0; i < vertices.length(); i++)
     {
         Vector3D tempVec = vertices[i].GetPosition();
         if (abs(tempVec.GetZ()) < 0.1f) tempVec.SetZ(0.1f);
         tempVec *= m_projectionMatrix;
         tempVec.ToCartesian();
-        Point point;
-        point.x = tempVec.GetX();
-        point.y = tempVec.GetY();
-        val.push_back(point);
+        Vertex vert;
+        vert.SetPosition(tempVec.GetX(), tempVec.GetY(), vertices[i].GetPosition().GetZ());
+        val.push_back(vert);
     }
     return val;
 }

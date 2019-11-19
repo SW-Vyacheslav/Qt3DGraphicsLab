@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="objectGroupBox">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -55,7 +55,7 @@
       <item>
        <widget class="QLabel" name="rLabel">
         <property name="toolTip">
-         <string>Radius of forming circle</string>
+         <string>Radius of generatix circle</string>
         </property>
         <property name="text">
          <string>r:</string>
@@ -71,7 +71,7 @@
       <item>
        <widget class="QLabel" name="nLabel">
         <property name="toolTip">
-         <string>Approximation of forming circle</string>
+         <string>Approximation of generatix circle</string>
         </property>
         <property name="text">
          <string>n:</string>
@@ -131,7 +131,7 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QGroupBox" name="outputGroupBox">
     <property name="geometry">
      <rect>
       <x>330</x>
@@ -143,7 +143,7 @@
     <property name="title">
      <string>Output</string>
     </property>
-    <widget class="QWidget" name="outputWidget" native="true">
+    <widget class="QFrame" name="outputFrame">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -152,18 +152,21 @@
        <height>721</height>
       </rect>
      </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_3">
+   <widget class="QGroupBox" name="toolsGroupBox">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>180</y>
+      <y>270</y>
       <width>311</width>
-      <height>581</height>
+      <height>491</height>
      </rect>
     </property>
     <property name="title">
@@ -181,17 +184,17 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="transformTab">
       <attribute name="title">
        <string>Transform</string>
       </attribute>
       <widget class="QWidget" name="verticalLayoutWidget">
        <property name="geometry">
         <rect>
-         <x>179</x>
+         <x>199</x>
          <y>10</y>
-         <width>101</width>
-         <height>83</height>
+         <width>81</width>
+         <height>121</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -218,118 +221,48 @@
         </item>
        </layout>
       </widget>
-      <widget class="QGroupBox" name="groupBox_4">
+      <widget class="QGroupBox" name="opPosGroupBox">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>100</y>
+         <y>140</y>
          <width>271</width>
-         <height>61</height>
+         <height>71</height>
         </rect>
        </property>
        <property name="title">
-        <string>Operation Point</string>
+        <string>Operation Position</string>
        </property>
-       <widget class="QWidget" name="horizontalLayoutWidget_2">
+       <widget class="QFrame" name="opPosFrame">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>20</y>
-          <width>201</width>
-          <height>31</height>
+          <width>251</width>
+          <height>41</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QLabel" name="label_10">
-           <property name="text">
-            <string>X:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="opXVal"/>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_9">
-           <property name="text">
-            <string>Y:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="opYVal"/>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_8">
-           <property name="text">
-            <string>Z:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="opZVal"/>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QPushButton" name="setButton">
-        <property name="geometry">
-         <rect>
-          <x>220</x>
-          <y>20</y>
-          <width>41</width>
-          <height>31</height>
-         </rect>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
         </property>
-        <property name="text">
-         <string>Set</string>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
         </property>
        </widget>
       </widget>
-      <widget class="QWidget" name="formLayoutWidget">
+      <widget class="QWidget" name="verticalLayoutWidget_3">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>158</width>
-         <height>81</height>
+         <width>181</width>
+         <height>121</height>
         </rect>
        </property>
-       <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>x:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>y:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>z:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="xVal"/>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="yVal"/>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="zVal"/>
-        </item>
-       </layout>
+       <layout class="QVBoxLayout" name="transformLayout"/>
       </widget>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="projectionsTab">
       <attribute name="title">
        <string>Projections</string>
       </attribute>
@@ -555,7 +488,7 @@
       </widget>
      </widget>
     </widget>
-    <widget class="QGroupBox" name="groupBox_10">
+    <widget class="QGroupBox" name="showGroupBox">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -602,71 +535,33 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_9">
+   <widget class="QGroupBox" name="objectTransformGroupBox">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>100</y>
       <width>301</width>
-      <height>71</height>
+      <height>161</height>
      </rect>
     </property>
     <property name="title">
-     <string>Object Position</string>
+     <string>Object Transform</string>
     </property>
-    <widget class="QWidget" name="horizontalLayoutWidget_7">
+    <widget class="QFrame" name="transformFrame">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>20</y>
        <width>281</width>
-       <height>41</height>
+       <height>131</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_8">
-      <item>
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>X:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="xPosVal">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>Y:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="yPosVal">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_14">
-        <property name="text">
-         <string>Z:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="zPosVal">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
     </widget>
    </widget>
   </widget>

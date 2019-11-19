@@ -20,7 +20,8 @@ public:
         UP_LEFT_CORNER,
         UP_RIGHT_CORNER,
         DOWN_LEFT_CORNER,
-        DOWN_RIGHT_CORNER
+        DOWN_RIGHT_CORNER,
+        USER_DEFINED
     };
 
     Transform();
@@ -35,13 +36,12 @@ public:
     Vector3D GetOpPosition() const;
     Pivot GetPivot() const;
 
+public slots:
     void SetPivot(Pivot pivot);
     void SetOpPosition(const Vector3D& position);
     void SetPosition(const Vector3D& position);
     void SetRotation(const Vector3D &rotation);
     void SetScale(const Vector3D &scale);
-
-    bool IsPivotUsed();
 
 signals:
     void OnPositionChanged(const Vector3D& newPosition);
@@ -56,7 +56,6 @@ private:
     Vector3D m_scale;
     Pivot m_pivot;
     Vector3D m_opPosition;
-    bool m_isUsePivot;
 };
 
 #endif // TRANSFORM_H

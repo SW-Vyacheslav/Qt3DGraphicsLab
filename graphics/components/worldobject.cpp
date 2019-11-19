@@ -10,11 +10,6 @@ WorldObject::~WorldObject()
 
 }
 
-Mesh& WorldObject::GetMesh()
-{
-    return m_mesh;
-}
-
 Transform& WorldObject::GetTransform()
 {
     return m_transform;

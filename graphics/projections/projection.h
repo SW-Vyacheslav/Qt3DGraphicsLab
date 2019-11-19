@@ -2,7 +2,6 @@
 #define PROJECTION_H
 
 #include <QList>
-#include "graphics/components/point.h"
 #include "graphics/components/vertex.h"
 
 class Projection
@@ -10,7 +9,7 @@ class Projection
 public:
     virtual ~Projection();
 
-    virtual QList<Point> GetProjectionPoints(const QList<Vertex>& vertices) = 0;
+    virtual QList<Vertex> Project(const QList<Vertex>& vertices) = 0;
 };
 
 #endif // PROJECTION_H
