@@ -31,9 +31,9 @@ void Thorus::Construct()
     float RAngle = 0;
     float rAngle = -180;
 
-    for (int i = 0; i < m_baseApprox; i++)
+    for (int i = 0; i < m_baseApprox; ++i)
     {
-        for (int j = 0; j < m_generatrixApprox; j++)
+        for (int j = 0; j < m_generatrixApprox; ++j)
         {
             Vertex vert;
             vert.SetPosition(
@@ -47,9 +47,9 @@ void Thorus::Construct()
         RAngle += RStep;
     }
 
-    for (int i = 0; i < m_baseApprox; i++)
+    for (int i = 0; i < m_baseApprox; ++i)
     {
-        for (int j = 0; j < m_generatrixApprox; j++)
+        for (int j = 0; j < m_generatrixApprox; ++j)
         {
             Edge edge;
             if(j + 1 == m_generatrixApprox)
@@ -66,9 +66,9 @@ void Thorus::Construct()
         }
     }
 
-    for (int i = 0; i < m_baseApprox; i++)
+    for (int i = 0; i < m_baseApprox; ++i)
     {
-        for (int j = 0; j < m_generatrixApprox; j++)
+        for (int j = 0; j < m_generatrixApprox; ++j)
         {
             Edge edge;
             if((i + 1) != m_baseApprox)
@@ -83,6 +83,71 @@ void Thorus::Construct()
             }
             GetMesh().AddEdge(edge);
         }
+    }
+
+    for (int i = 0; i < m_baseApprox; ++i)
+    {
+        for (int j = 0; j < m_generatrixApprox; ++j)
+        {
+            Face face;
+            if ((j + 1 != m_generatrixApprox) && (i + 1 != m_baseApprox))
+            {
+                face.vertexIndexes[0] = j + (i * m_generatrixApprox);
+                face.vertexIndexes[1] = j + (i * m_generatrixApprox) + 1;
+                face.vertexIndexes[2] = j + ((i + 1) * m_generatrixApprox);
+                GetMesh().AddFace(face);
+                face.vertexIndexes[0] = j + ((i + 1) * m_generatrixApprox) + 1;
+                face.vertexIndexes[1] = j + ((i + 1) * m_generatrixApprox);
+                face.vertexIndexes[2] = j + (i * m_generatrixApprox) + 1;
+                GetMesh().AddFace(face);
+            }
+            else if ((j + 1 == m_generatrixApprox) && (i + 1 != m_baseApprox))
+            {
+                face.vertexIndexes[0] = j + (i * m_generatrixApprox);
+                face.vertexIndexes[1] = j + (i * m_generatrixApprox) - m_generatrixApprox + 1;
+                face.vertexIndexes[2] = j + ((i + 1) * m_generatrixApprox);
+                GetMesh().AddFace(face);
+                face.vertexIndexes[0] = j + ((i + 1) * m_generatrixApprox) - m_generatrixApprox + 1;
+                face.vertexIndexes[1] = j + ((i + 1) * m_generatrixApprox);
+                face.vertexIndexes[2] = j + (i * m_generatrixApprox) - m_generatrixApprox + 1;
+                GetMesh().AddFace(face);
+            }
+            else if ((j + 1 != m_generatrixApprox) && (i + 1 == m_baseApprox))
+            {
+                face.vertexIndexes[0] = j + (i * m_generatrixApprox);
+                face.vertexIndexes[1] = j + (i * m_generatrixApprox) + 1;
+                face.vertexIndexes[2] = j;
+                GetMesh().AddFace(face);
+                face.vertexIndexes[0] = j + 1;
+                face.vertexIndexes[1] = j;
+                face.vertexIndexes[2] = j + (i * m_generatrixApprox) + 1;
+                GetMesh().AddFace(face);
+            }
+            else
+            {
+                face.vertexIndexes[0] = j + (i * m_generatrixApprox);
+                face.vertexIndexes[1] = j + (i * m_generatrixApprox) - m_generatrixApprox + 1;
+                face.vertexIndexes[2] = j;
+                GetMesh().AddFace(face);
+                face.vertexIndexes[0] = j - m_generatrixApprox + 1;
+                face.vertexIndexes[1] = j;
+                face.vertexIndexes[2] = j + (i * m_generatrixApprox) - m_generatrixApprox + 1;
+                GetMesh().AddFace(face);
+            }
+        }
+    }
+}
+
+void Thorus::RecalculateNormals()
+{
+    for (int i = 0; i < GetMesh().GetFacesNum(); ++i)
+    {
+        Face& face = GetMesh().GetFace(i);
+        Vector3D v1 = GetMesh().GetVertex(face.vertexIndexes[1]).GetPosition() -
+                GetMesh().GetVertex(face.vertexIndexes[0]).GetPosition();
+        Vector3D v2 = GetMesh().GetVertex(face.vertexIndexes[2]).GetPosition() -
+                GetMesh().GetVertex(face.vertexIndexes[0]).GetPosition();
+        face.normal = Vector3D::CrossProduct(v1, v2).GetNormalized();
     }
 }
 

@@ -8,7 +8,6 @@ class AxonometricProjection : public Projection
 {
 public:
     AxonometricProjection(const float& alphaAngle, const float& betaAngle);
-    ~AxonometricProjection() override;
 
     QList<Vertex> Project(const QList<Vertex> &vertices) override;
 

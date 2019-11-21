@@ -49,6 +49,7 @@ signals:
     void OnScaleChanged(const Vector3D& newScale);
     void OnPivotChanged(Pivot newPivot);
     void OnOpPositionChanged(const Vector3D& newPosition);
+    void OnStateChanged();
 
 private:
     Vector3D m_position;

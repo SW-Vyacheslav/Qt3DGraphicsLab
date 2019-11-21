@@ -49,6 +49,9 @@ Vector3D Vector3DWidget::GetValue() const
 void Vector3DWidget::SetValue(const Vector3D &value)
 {
     m_value = value;
+    m_editX->setText(QString::number(static_cast<double>(value.GetX())));
+    m_editY->setText(QString::number(static_cast<double>(value.GetY())));
+    m_editZ->setText(QString::number(static_cast<double>(value.GetZ())));
     emit OnValueChanged(m_value);
 }
 

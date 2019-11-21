@@ -15,6 +15,7 @@ SOURCES += main.cpp \
     graphics/components/camera.cpp \
     graphics/components/transformmatrixcreator.cpp \
     graphics/components/worldobject.cpp \
+    graphics/components/zbuffer.cpp \
     mainwindow.cpp \
     graphics/components/mesh.cpp \
     graphics/components/transform.cpp \
@@ -31,7 +32,6 @@ SOURCES += main.cpp \
     math/Matrix4x4.cpp \
     math/Vector2D.cpp \
     math/Vector3D.cpp \
-    widgets/transformwidget.cpp \
     widgets/vector3dwidget.cpp \
     widgets/worldwidget.cpp
 
@@ -44,6 +44,7 @@ HEADERS  += mainwindow.h \
     graphics/components/transformmatrixcreator.h \
     graphics/components/vertex.h \
     graphics/components/worldobject.h \
+    graphics/components/zbuffer.h \
     graphics/projections/axonometricprojection.h \
     graphics/projections/frontalprojection.h \
     graphics/projections/horizontalprojection.h \
@@ -57,7 +58,6 @@ HEADERS  += mainwindow.h \
     math/Matrix4x4.h \
     math/Vector2D.h \
     math/Vector3D.h \
-    widgets/transformwidget.h \
     widgets/vector3dwidget.h \
     widgets/worldwidget.h
 

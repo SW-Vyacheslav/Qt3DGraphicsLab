@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "widgets/worldwidget.h"
 #include "widgets/vector3dwidget.h"
+#include "graphics/thorus.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +18,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private:
+    Thorus& getThorus();
+    void updateTransformWidgets();
+
 public slots:
     void generateObject();
     void translateObject();
@@ -28,7 +33,7 @@ public slots:
     void setAxonometricProjection();
     void setObliqueProjection();
     void setPerspectiveProjection();
-    void vc(int a);
+    void drawModelChanged();
 
 private:
     Ui::MainWindow *ui;
@@ -37,6 +42,9 @@ private:
     Vector3DWidget* m_translateWidg;
     Vector3DWidget* m_rotateWidg;
     Vector3DWidget* m_scaleWidg;
+    Vector3DWidget* m_transfPosWidg;
+    Vector3DWidget* m_transfRotWidg;
+    Vector3DWidget* m_transfScaleWidg;
 };
 
 #endif // MAINWINDOW_H

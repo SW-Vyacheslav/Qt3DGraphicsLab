@@ -172,13 +172,55 @@
     <property name="title">
      <string>Tools</string>
     </property>
+    <widget class="QGroupBox" name="showGroupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>291</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Show</string>
+     </property>
+     <widget class="QWidget" name="horizontalLayoutWidget_8">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>91</width>
+        <height>42</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QRadioButton" name="wireframeRadioButton">
+         <property name="text">
+          <string>Wireframe</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="surfaceRadioButton">
+         <property name="text">
+          <string>Surface</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
     <widget class="QTabWidget" name="tabWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>100</y>
        <width>291</width>
-       <height>481</height>
+       <height>381</height>
       </rect>
      </property>
      <property name="currentIndex">
@@ -188,52 +230,22 @@
       <attribute name="title">
        <string>Transform</string>
       </attribute>
-      <widget class="QWidget" name="verticalLayoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>199</x>
-         <y>10</y>
-         <width>81</width>
-         <height>121</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QPushButton" name="translateButton">
-          <property name="text">
-           <string>Translate</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="scaleButton">
-          <property name="text">
-           <string>Scale</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="rotateButton">
-          <property name="text">
-           <string>Rotate</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QGroupBox" name="opPosGroupBox">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>140</y>
          <width>271</width>
-         <height>71</height>
+         <height>101</height>
         </rect>
        </property>
        <property name="title">
         <string>Operation Position</string>
        </property>
        <widget class="QFrame" name="opPosFrame">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -249,17 +261,97 @@
          <enum>QFrame::Raised</enum>
         </property>
        </widget>
+       <widget class="QCheckBox" name="pivotCheckBox">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>70</y>
+          <width>70</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Enable</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="verticalLayoutWidget_3">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>181</width>
+         <width>271</width>
          <height>121</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="transformLayout"/>
+       <layout class="QVBoxLayout" name="transformLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QFrame" name="translateFrame">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="translateButton">
+            <property name="text">
+             <string>Translate</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <widget class="QFrame" name="rotateFrame">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="rotateButton">
+            <property name="text">
+             <string>Rotate</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QFrame" name="scaleFrame">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="scaleButton">
+            <property name="text">
+             <string>Scale</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
      <widget class="QWidget" name="projectionsTab">
@@ -488,85 +580,160 @@
       </widget>
      </widget>
     </widget>
-    <widget class="QGroupBox" name="showGroupBox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>291</width>
-       <height>61</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Show</string>
-     </property>
-     <widget class="QWidget" name="horizontalLayoutWidget_8">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>271</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_9">
-       <item>
-        <widget class="QCheckBox" name="verticesCheckBox">
-         <property name="text">
-          <string>Vertices</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="edgesCheckBox">
-         <property name="text">
-          <string>Edges</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="facesCheckBox">
-         <property name="text">
-          <string>Faces</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
    </widget>
    <widget class="QGroupBox" name="objectTransformGroupBox">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>100</y>
-      <width>301</width>
+      <width>311</width>
       <height>161</height>
      </rect>
     </property>
     <property name="title">
      <string>Object Transform</string>
     </property>
-    <widget class="QFrame" name="transformFrame">
+    <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>281</width>
+       <width>291</width>
        <height>131</height>
       </rect>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_10">
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Position:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="positionFrame">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_11">
+        <item>
+         <widget class="QLabel" name="label_6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Rotation:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="rotationFrame">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_12">
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Scale:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="scaleFrame2">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
    </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pivotCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>opPosFrame</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>76</x>
+     <y>610</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>167</x>
+     <y>572</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -7,7 +7,6 @@ class FrontalProjection : public Projection
 {
 public:
     FrontalProjection();
-    ~FrontalProjection() override;
 
     QList<Vertex> Project(const QList<Vertex> &vertices) override;
 };

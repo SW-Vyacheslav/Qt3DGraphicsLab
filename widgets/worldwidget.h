@@ -6,6 +6,7 @@
 #include "graphics/components/camera.h"
 #include "graphics/components/vertex.h"
 #include "graphics/projections/projection.h"
+#include "graphics/components/zbuffer.h"
 #include "math/Vector2D.h"
 
 class WorldWidget : public QWidget
@@ -14,18 +15,36 @@ class WorldWidget : public QWidget
 public:
     explicit WorldWidget(QWidget *parent = nullptr);
 
+    enum DrawModel
+    {
+        WIREFRAME,
+        SURFACE
+    };
+
     WorldObject& GetWorldObject();
+    void SetProjection(Projection* projection);
+
+public slots:
+    void SetDrawModel(const DrawModel& drawModel);
 
 private:
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
-    void drawObject(QPainter& painter);
     QList<Vertex> VerticesToCoordSystem(const QList<Vertex>& vertices);
+    void fillTriangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, const QRgb& color);
+
+    void drawObjectSurface();
+    void drawObjectWireframe();
+    void drawMisc();
+
+    QList<Vertex> transformVertices(const QList<Vertex>& vertices);
 
 private:
     WorldObject* m_worldObject;
     Projection* m_projection;
+    ZBuffer* m_zBuffer;
     Vector2D m_coordSysCenter;
+    DrawModel m_drawModel;
 };
 
 #endif // WORLDWIDGET_H
