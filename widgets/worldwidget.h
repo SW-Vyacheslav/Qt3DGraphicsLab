@@ -31,13 +31,15 @@ private:
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
     QList<Vertex> VerticesToCoordSystem(const QList<Vertex>& vertices);
-    void fillTriangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, const QRgb& color);
+    void fillTriangle(Vertex v1, Vertex v2, Vertex v3, const QRgb& color);
+    void swapVerts(Vertex& v1, Vertex& v2);
 
     void drawObjectSurface();
     void drawObjectWireframe();
     void drawMisc();
 
     QList<Vertex> transformVertices(const QList<Vertex>& vertices);
+    void recalculateNormals(const QList<Vertex>& vertices);
 
 private:
     WorldObject* m_worldObject;

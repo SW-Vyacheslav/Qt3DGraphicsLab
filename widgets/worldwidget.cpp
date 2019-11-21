@@ -26,7 +26,7 @@ void WorldWidget::paintEvent(QPaintEvent*)
         drawObjectSurface();
         break;
     }
-    drawMisc();
+    //drawMisc();
 }
 
 void WorldWidget::resizeEvent(QResizeEvent *event)
@@ -43,19 +43,27 @@ void WorldWidget::drawObjectSurface()
     QPainter painter;
     painter.begin(this);
     painter.fillRect(0, 0, width(), height(), Qt::black);
-    painter.end();
     Thorus* thorus = static_cast<Thorus*>(m_worldObject);
     Mesh& objMesh = thorus->GetMesh();
-    QList<Vertex> verts = VerticesToCoordSystem(m_projection->Project(transformVertices(objMesh.GetVertices())));
+    QList<Vertex> verts = transformVertices(objMesh.GetVertices());
+    recalculateNormals(verts);
+    verts = VerticesToCoordSystem(m_projection->Project(verts));
     m_zBuffer->Clear();
+    Vector3D light(0.0f, 0.0f, -100.0f);
     for (int i = 0; i < objMesh.GetFacesNum(); ++i)
     {
         Face& face = objMesh.GetFace(i);
+        float dotProd = Vector3D::DotProduct(light.GetNormalized(), face.normal);
+        QColor col;
+        col.setHsl(0, 0, static_cast<int>(dotProd * 100));
+        col.toRgb();
+        face.color = qRgb(col.red(), col.green(), col.blue());
         fillTriangle(verts[face.vertexIndexes[0]],
                 verts[face.vertexIndexes[1]],
                 verts[face.vertexIndexes[2]],
                 face.color);
     }
+    painter.end();
 }
 
 void WorldWidget::drawObjectWireframe()
@@ -124,6 +132,21 @@ QList<Vertex> WorldWidget::transformVertices(const QList<Vertex> &vertices)
     return verts;
 }
 
+void WorldWidget::recalculateNormals(const QList<Vertex>& vertices)
+{
+    Thorus* thorus = static_cast<Thorus*>(m_worldObject);
+    Mesh& objMesh = thorus->GetMesh();
+    for (int i = 0; i < objMesh.GetFacesNum(); ++i)
+    {
+        Face& face = objMesh.GetFace(i);
+        Vector3D v1 = vertices[face.vertexIndexes[1]].GetPosition() -
+                vertices[face.vertexIndexes[0]].GetPosition();
+        Vector3D v2 = vertices[face.vertexIndexes[2]].GetPosition() -
+                vertices[face.vertexIndexes[0]].GetPosition();
+        face.normal = Vector3D::CrossProduct(v2, v1).GetNormalized();
+    }
+}
+
 QList<Vertex> WorldWidget::VerticesToCoordSystem(const QList<Vertex>& vertices)
 {
     QList<Vertex> val;
@@ -138,14 +161,90 @@ QList<Vertex> WorldWidget::VerticesToCoordSystem(const QList<Vertex>& vertices)
     return val;
 }
 
-void WorldWidget::fillTriangle(const Vertex &v1, const Vertex &v2, const Vertex &v3, const QRgb &color)
+void WorldWidget::fillTriangle(Vertex v1, Vertex v2, Vertex v3, const QRgb &color)
 {
-
-
     QPainter painter;
     painter.begin(this);
+    painter.setPen(color);
+    painter.setBrush(QBrush(color));
+
+    if (v2.GetPosition().GetY() < v1.GetPosition().GetY()) swapVerts(v1, v2);
+    if (v3.GetPosition().GetY() < v1.GetPosition().GetY()) swapVerts(v1, v3);
+    if (v3.GetPosition().GetY() < v2.GetPosition().GetY()) swapVerts(v3, v2);
+
+    int dy1 = static_cast<int>(v2.GetPosition().GetY() - v1.GetPosition().GetY());
+    int dx1 = static_cast<int>(v2.GetPosition().GetX() - v1.GetPosition().GetX());
+    int dy2 = static_cast<int>(v3.GetPosition().GetY() - v1.GetPosition().GetY());
+    int dx2 = static_cast<int>(v3.GetPosition().GetX() - v1.GetPosition().GetX());
+    float daxStep = 0;
+    float dbxStep = 0;
+
+    if (dy1) daxStep = dx1 / static_cast<float>(abs(dy1));
+    if (dy2) dbxStep = dx2 / static_cast<float>(abs(dy2));
+
+    if (dy1)
+    {
+        for (int i = static_cast<int>(v1.GetPosition().GetY()); i <= static_cast<int>(v2.GetPosition().GetY()); i++)
+        {
+            int ax = static_cast<int>(v1.GetPosition().GetX() + (i - v1.GetPosition().GetY()) * daxStep);
+            int bx = static_cast<int>(v1.GetPosition().GetX() + (i - v1.GetPosition().GetY()) * dbxStep);
+
+            if (ax > bx)
+            {
+                int temp = ax;
+                ax = bx;
+                bx = temp;
+            }
+
+            for (int j = ax; j < bx; j++)
+            {
+                if (m_zBuffer->CheckAndSet(j, i, v1.GetPosition().GetZ()))
+                {
+                    painter.drawPoint(j, i);
+                }
+            }
+
+        }
+    }
+
+    dy1 = static_cast<int>(v3.GetPosition().GetY() - v2.GetPosition().GetY());
+    dx1 = static_cast<int>(v3.GetPosition().GetX() - v2.GetPosition().GetX());
+
+    if (dy1) daxStep = dx1 / static_cast<float>(abs(dy1));
+
+    if (dy1)
+    {
+        for (int i = static_cast<int>(v2.GetPosition().GetY()); i <= static_cast<int>(v3.GetPosition().GetY()); i++)
+        {
+            int ax = static_cast<int>(v2.GetPosition().GetX() + (i - v2.GetPosition().GetY()) * daxStep);
+            int bx = static_cast<int>(v1.GetPosition().GetX() + (i - v1.GetPosition().GetY()) * dbxStep);
+
+            if (ax > bx)
+            {
+                int temp = ax;
+                ax = bx;
+                bx = temp;
+            }
+
+            for (int j = ax; j < bx; j++)
+            {
+                if (m_zBuffer->CheckAndSet(j, i, v1.GetPosition().GetZ()))
+                {
+                    painter.drawPoint(j, i);
+                }
+            }
+
+        }
+    }
 
     painter.end();
+}
+
+void WorldWidget::swapVerts(Vertex &v1, Vertex &v2)
+{
+    Vertex temp = v1;
+    v1 = v2;
+    v2 = temp;
 }
 
 WorldObject& WorldWidget::GetWorldObject()

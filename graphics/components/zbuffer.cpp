@@ -24,13 +24,16 @@ void ZBuffer::Clear()
 
 float ZBuffer::ElementAt(const int &x, const int &y)
 {
-    if (x < 0 || x > m_width) throw "Out of memory by x";
-    if (y < 0 || y > m_height) throw "Out of memory by y";
+    if (x < 0 || x > m_width - 1) return 0.0f;
+    if (y < 0 || y > m_height - 1) return 0.0f;
     return m_buffer[y * m_width + x];
 }
 
 bool ZBuffer::CheckAndSet(const int &x, const int &y, const float &depth)
 {
+    if (x < 0 || x > m_width - 1) return false;
+    if (y < 0 || y > m_height - 1) return false;
+
     if (depth < ElementAt(x, y))
     {
         m_buffer[y * m_width + x] = depth;

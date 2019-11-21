@@ -138,19 +138,6 @@ void Thorus::Construct()
     }
 }
 
-void Thorus::RecalculateNormals()
-{
-    for (int i = 0; i < GetMesh().GetFacesNum(); ++i)
-    {
-        Face& face = GetMesh().GetFace(i);
-        Vector3D v1 = GetMesh().GetVertex(face.vertexIndexes[1]).GetPosition() -
-                GetMesh().GetVertex(face.vertexIndexes[0]).GetPosition();
-        Vector3D v2 = GetMesh().GetVertex(face.vertexIndexes[2]).GetPosition() -
-                GetMesh().GetVertex(face.vertexIndexes[0]).GetPosition();
-        face.normal = Vector3D::CrossProduct(v1, v2).GetNormalized();
-    }
-}
-
 int Thorus::GetBaseApprox() const
 {
     return m_baseApprox;

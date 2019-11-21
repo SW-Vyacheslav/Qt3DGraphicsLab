@@ -102,7 +102,6 @@ void MainWindow::generateObject()
 {
     Thorus& thorus = getThorus();
     thorus.Construct();
-    thorus.RecalculateNormals();
     m_worldWidget->update();
     updateTransformWidgets();
 }
@@ -111,7 +110,6 @@ void MainWindow::translateObject()
 {
     Vector3D val = m_translateWidg->GetValue();
     m_worldWidget->GetWorldObject().GetTransform().Translate(val.GetX(), val.GetY(), val.GetZ());
-    getThorus().RecalculateNormals();
     updateTransformWidgets();
 }
 
@@ -119,7 +117,6 @@ void MainWindow::scaleObject()
 {
     Vector3D val = m_scaleWidg->GetValue();
     m_worldWidget->GetWorldObject().GetTransform().Scale(val.GetX(), val.GetY(), val.GetZ());
-    getThorus().RecalculateNormals();
     updateTransformWidgets();
 }
 
@@ -127,7 +124,6 @@ void MainWindow::rotateObject()
 {
     Vector3D val = m_rotateWidg->GetValue();
     m_worldWidget->GetWorldObject().GetTransform().Rotate(val.GetX(), val.GetY(), val.GetZ());
-    getThorus().RecalculateNormals();
     updateTransformWidgets();
 }
 

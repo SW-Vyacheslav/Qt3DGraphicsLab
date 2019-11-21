@@ -14,7 +14,6 @@ public:
     Thorus(const int& baseApprox, const int& generatrixApprox, const int& baseRadius, const int& generatrixRadius);
 
     void Construct();
-    void RecalculateNormals();
 
     int GetBaseApprox() const;
     int GetGeneratrixApprox() const;
