@@ -45,6 +45,7 @@ private:
     Vector3DWidget* m_transfPosWidg;
     Vector3DWidget* m_transfRotWidg;
     Vector3DWidget* m_transfScaleWidg;
+    Vector3DWidget* m_lightWidg;
 };
 
 #endif // MAINWINDOW_H

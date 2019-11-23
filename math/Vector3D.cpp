@@ -52,9 +52,9 @@ float Vector3D::GetLength() const
 
 Vector3D Vector3D::GetNormalized() const
 {
-    Vector3D ret_val;
     float len = GetLength();
-    if (len == 0.0f) return ret_val;
+    if (len == 0.0f) return *this;
+    Vector3D ret_val;
     ret_val.x = x / len;
     ret_val.y = y / len;
     ret_val.z = z / len;
@@ -72,16 +72,18 @@ void Vector3D::Normalize()
 
 Vector3D Vector3D::GetCartesian() const
 {
+    if (w == 0.0f) return *this;
     Vector3D val;
     val.SetX(x / w);
     val.SetY(y / w);
     val.SetZ(z / w);
     val.SetW(1.0f);
-    return  val;
+    return val;
 }
 
 void Vector3D::ToCartesian()
 {
+    if (w == 0.0f) return;
     x /= w;
     y /= w;
     z /= w;
@@ -90,7 +92,7 @@ void Vector3D::ToCartesian()
 
 float Vector3D::DotProduct(const Vector3D& vec1, const Vector3D& vec2)
 {
-    return vec1.x*vec2.x + vec1.y*vec2.y + vec1.z*vec2.z;
+    return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
 }
 
 Vector3D Vector3D::CrossProduct(const Vector3D& vec1, const Vector3D& vec2)
@@ -99,6 +101,15 @@ Vector3D Vector3D::CrossProduct(const Vector3D& vec1, const Vector3D& vec2)
     ret_val.x = (vec1.y * vec2.z) - (vec1.z * vec2.y);
     ret_val.y = (vec1.z * vec2.x) - (vec1.x * vec2.z);
     ret_val.z = (vec1.x * vec2.y) - (vec1.y * vec2.x);
+    return ret_val;
+}
+
+Vector3D Vector3D::operator-()
+{
+    Vector3D ret_val;
+    ret_val.SetX(-this->GetX());
+    ret_val.SetY(-this->GetY());
+    ret_val.SetZ(-this->GetZ());
     return ret_val;
 }
 

@@ -13,6 +13,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     graphics/components/camera.cpp \
+    graphics/components/colorn.cpp \
+    graphics/components/light.cpp \
     graphics/components/transformmatrixcreator.cpp \
     graphics/components/worldobject.cpp \
     graphics/components/zbuffer.cpp \
@@ -28,8 +30,8 @@ SOURCES += main.cpp \
     graphics/projections/profileprojection.cpp \
     graphics/projections/projection.cpp \
     graphics/thorus.cpp \
-    math/Converter.cpp \
     math/Matrix4x4.cpp \
+    math/Tools.cpp \
     math/Vector2D.cpp \
     math/Vector3D.cpp \
     widgets/vector3dwidget.cpp \
@@ -37,8 +39,10 @@ SOURCES += main.cpp \
 
 HEADERS  += mainwindow.h \
     graphics/components/camera.h \
+    graphics/components/colorn.h \
     graphics/components/edge.h \
     graphics/components/face.h \
+    graphics/components/light.h \
     graphics/components/mesh.h \
     graphics/components/transform.h \
     graphics/components/transformmatrixcreator.h \
@@ -54,8 +58,8 @@ HEADERS  += mainwindow.h \
     graphics/projections/projection.h \
     graphics/thorus.h \
     graphics/projections.h \
-    math/Converter.h \
     math/Matrix4x4.h \
+    math/Tools.h \
     math/Vector2D.h \
     math/Vector3D.h \
     widgets/vector3dwidget.h \

@@ -2,12 +2,14 @@
 #define WORLDWIDGET_H
 
 #include <QWidget>
+#include <QImage>
 #include "graphics/components/worldobject.h"
 #include "graphics/components/camera.h"
 #include "graphics/components/vertex.h"
 #include "graphics/projections/projection.h"
 #include "graphics/components/zbuffer.h"
 #include "math/Vector2D.h"
+#include <mutex>
 
 class WorldWidget : public QWidget
 {
@@ -26,18 +28,24 @@ public:
 
 public slots:
     void SetDrawModel(const DrawModel& drawModel);
+    void SetLight(const Vector3D& light);
+    void redraw();
 
 private:
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
-    QList<Vertex> VerticesToCoordSystem(const QList<Vertex>& vertices);
-    void fillTriangle(Vertex v1, Vertex v2, Vertex v3, const QRgb& color);
-    void swapVerts(Vertex& v1, Vertex& v2);
+
+    void fillTriangle(Vertex v1, Vertex v2, Vertex v3, const QColor& color);
+    void fillRect(const int& x, const int& y, const int& width, const int& height, const QColor& color);
+    void drawLine(const int& x1, const int& y1, const int& x2, const int& y2, const QColor& color);
+    void drawPixel(const int& x, const int& y, const QColor& color);
 
     void drawObjectSurface();
     void drawObjectWireframe();
     void drawMisc();
+    void redrawThread();
 
+    QList<Vertex> VerticesToCoordSystem(const QList<Vertex>& vertices);
     QList<Vertex> transformVertices(const QList<Vertex>& vertices);
     void recalculateNormals(const QList<Vertex>& vertices);
 
@@ -46,7 +54,11 @@ private:
     Projection* m_projection;
     ZBuffer* m_zBuffer;
     Vector2D m_coordSysCenter;
+    Vector3D m_light;
     DrawModel m_drawModel;
+    QImage* m_renderBuffer;
+    QImage* m_drawBuffer;
+    std::mutex m_drawMutex;
 };
 
 #endif // WORLDWIDGET_H

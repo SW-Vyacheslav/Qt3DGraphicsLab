@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
 
     setFixedSize(width(), height());
+    ui->opPosGroupBox->hide();
 
     m_worldWidget = new WorldWidget(ui->outputFrame);
     m_worldWidget->setFixedSize(ui->outputFrame->size());
@@ -17,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     m_opPosWidg = new Vector3DWidget(ui->opPosFrame);
     ui->opPosFrame->setLayout(m_opPosWidg->layout());
     connect(m_opPosWidg, &Vector3DWidget::OnValueChanged, &m_worldWidget->GetWorldObject().GetTransform(), &Transform::SetOpPosition);
+
+    m_lightWidg = new Vector3DWidget();
+    ui->lightFrame->setLayout(m_lightWidg->layout());
+    connect(m_lightWidg, &Vector3DWidget::OnValueChanged, m_worldWidget, &WorldWidget::SetLight);
 
     m_translateWidg = new Vector3DWidget();
     ui->translateFrame->setLayout(m_translateWidg->layout());
@@ -102,7 +107,7 @@ void MainWindow::generateObject()
 {
     Thorus& thorus = getThorus();
     thorus.Construct();
-    m_worldWidget->update();
+    m_worldWidget->redraw();
     updateTransformWidgets();
 }
 

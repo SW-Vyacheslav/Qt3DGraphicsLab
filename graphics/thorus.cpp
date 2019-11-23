@@ -1,7 +1,7 @@
 #include "graphics/thorus.h"
 #include "graphics/components/mesh.h"
 #include "graphics/components/vertex.h"
-#include "math/Converter.h"
+#include "math/Tools.h"
 
 Thorus::Thorus():
     QObject(nullptr),
@@ -37,9 +37,9 @@ void Thorus::Construct()
         {
             Vertex vert;
             vert.SetPosition(
-                        (m_baseRadius + m_generatrixRadius * cosf(Converter::DegreesToRadians(rAngle))) * cosf(Converter::DegreesToRadians(RAngle)),
-                        (m_baseRadius + m_generatrixRadius * cosf(Converter::DegreesToRadians(rAngle))) * sinf(Converter::DegreesToRadians(RAngle)),
-                        m_generatrixRadius * sinf(Converter::DegreesToRadians(rAngle)));
+                        (m_baseRadius + m_generatrixRadius * cosf(Tools::degToRad(rAngle))) * cosf(Tools::degToRad(RAngle)),
+                        (m_baseRadius + m_generatrixRadius * cosf(Tools::degToRad(rAngle))) * sinf(Tools::degToRad(RAngle)),
+                        m_generatrixRadius * sinf(Tools::degToRad(rAngle)));
             GetMesh().AddVertex(vert);
             rAngle += rStep;
         }
