@@ -7,8 +7,8 @@ public:
     static float degToRad(const float& deg);
     static float scaleInRange(const float& value, const float& oldMin, const float& oldMax, const float& newMin, const float& newMax);
 
-    static float clamp(const float& value, const float& min, const float& max);
-    static int clamp(const int& value, const int& min, const int& max);
+    static float clamp(const float& value, const float& minVal, const float& maxVal);
+    static int clamp(const int& value, const int& minVal, const int& maxVal);
 
     static float min(const float& a, const float& b);
     static int min(const int& a, const int& b);

@@ -10,14 +10,14 @@ float Tools::scaleInRange(const float &value, const float &oldMin, const float &
     return ((value - oldMin)/(oldMax - oldMin)) * (newMax - newMin) + newMin;
 }
 
-float Tools::clamp(const float &value, const float &min, const float &max)
+float Tools::clamp(const float &value, const float &minVal, const float &maxVal)
 {
-    return Tools::max(min, Tools::min(value , max));
+    return max(minVal, min(value , maxVal));
 }
 
-int Tools::clamp(const int &value, const int &min, const int &max)
+int Tools::clamp(const int &value, const int &minVal, const int &maxVal)
 {
-    return Tools::max(min, Tools::min(value , max));
+    return max(minVal, min(value , maxVal));
 }
 
 float Tools::min(const float &a, const float &b)

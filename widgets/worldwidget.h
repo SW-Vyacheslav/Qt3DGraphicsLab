@@ -16,6 +16,7 @@ class WorldWidget : public QWidget
     Q_OBJECT
 public:
     explicit WorldWidget(QWidget *parent = nullptr);
+    ~WorldWidget() override;
 
     enum DrawModel
     {
@@ -35,7 +36,7 @@ private:
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 
-    void fillTriangle(Vertex v1, Vertex v2, Vertex v3, const QColor& color);
+    void fillTriangle(const Vertex& vert1, const Vertex& vert2, const Vertex& vert3, const QColor& color);
     void fillRect(const int& x, const int& y, const int& width, const int& height, const QColor& color);
     void drawLine(const int& x1, const int& y1, const int& x2, const int& y2, const QColor& color);
     void drawPixel(const int& x, const int& y, const QColor& color);

@@ -58,6 +58,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->lOblVal->setText("1");
     ui->dVal->setValidator(new QDoubleValidator());
     ui->dVal->setText("1");
+    ui->roVal->setValidator(new QDoubleValidator());
+    ui->roVal->setText("1");
+    ui->alphaPerVal->setValidator(new QDoubleValidator());
+    ui->alphaPerVal->setText("0");
+    ui->betaPerVal->setValidator(new QDoubleValidator());
+    ui->betaPerVal->setText("0");
 
     connect(ui->generateButton, &QAbstractButton::clicked, this, &MainWindow::generateObject);
     connect(ui->translateButton, &QAbstractButton::clicked, this, &MainWindow::translateObject);
@@ -101,6 +107,11 @@ void MainWindow::updateTransformWidgets()
     m_transfPosWidg->SetValue(transform.GetPosition());
     m_transfRotWidg->SetValue(transform.GetRotation());
     m_transfScaleWidg->SetValue(transform.GetScale());
+}
+
+void MainWindow::closeEvent(QCloseEvent*)
+{
+    exit(1);
 }
 
 void MainWindow::generateObject()
@@ -164,7 +175,10 @@ void MainWindow::setObliqueProjection()
 void MainWindow::setPerspectiveProjection()
 {
     float dVal = ui->dVal->text().toFloat();
-    m_worldWidget->SetProjection(new PerspectiveProjection(dVal));
+    float roVal = ui->roVal->text().toFloat();
+    float alpha = ui->alphaPerVal->text().toFloat();
+    float beta = ui->betaPerVal->text().toFloat();
+    m_worldWidget->SetProjection(new PerspectiveProjection(dVal, roVal, alpha, beta));
 }
 
 void MainWindow::drawModelChanged()

@@ -1,11 +1,11 @@
 #include "worldwidget.h"
 #include <QPainter>
+#include <thread>
+#include <math.h>
 #include "graphics/thorus.h"
 #include "graphics/projections.h"
 #include "graphics/components/transformmatrixcreator.h"
 #include "math/Tools.h"
-#include <thread>
-#include <math.h>
 
 WorldWidget::WorldWidget(QWidget *parent) :
     QWidget(parent),
@@ -21,6 +21,17 @@ WorldWidget::WorldWidget(QWidget *parent) :
     m_renderBuffer->fill(Qt::black);
 }
 
+WorldWidget::~WorldWidget()
+{
+    std::lock_guard<std::mutex> ul(m_drawMutex);
+
+    delete m_worldObject;
+    delete m_projection;
+    delete m_zBuffer;
+    delete m_renderBuffer;
+    delete m_drawBuffer;
+}
+
 void WorldWidget::paintEvent(QPaintEvent*)
 {
     QPainter painter;
@@ -31,6 +42,7 @@ void WorldWidget::paintEvent(QPaintEvent*)
 
 void WorldWidget::resizeEvent(QResizeEvent *event)
 {
+    std::lock_guard<std::mutex> ul(m_drawMutex);
     m_coordSysCenter.SetX(event->size().width()/2);
     m_coordSysCenter.SetY(event->size().height()/2);
     delete m_zBuffer;
@@ -60,17 +72,20 @@ void WorldWidget::drawObjectSurface()
                 posVerts[face.vertexIndexes[1]].GetPosition() +
                 posVerts[face.vertexIndexes[2]].GetPosition()) *
                 (1.0f/3.0f);
-        Vector3D lightDir = (vertPos - m_light).GetNormalized();
+        Vector3D lightDir = (m_light - vertPos).GetNormalized();
         float dotProd = Vector3D::DotProduct(lightDir, face.normal);
-        int intensity = static_cast<int>(100.0f * Tools::clamp(dotProd, 0.0f, 1.0f));
+        float diffuseReflCoef = 1.0f;
+        float lightIntens = 100.0f;
+        int reflLightIntens = static_cast<int>(lightIntens * diffuseReflCoef * Tools::clamp(dotProd, 0.0f, 1.0f));
         QColor col;
-        col.setHsl(120, 100, intensity);
+        col.setHsl(120, 100, reflLightIntens);
         col.toRgb();
         face.color = qRgb(col.red(), col.green(), col.blue());
         fillTriangle(screenVerts[face.vertexIndexes[0]],
                 screenVerts[face.vertexIndexes[1]],
                 screenVerts[face.vertexIndexes[2]],
                 face.color);
+
     }
 }
 
@@ -134,9 +149,9 @@ void WorldWidget::recalculateNormals(const QList<Vertex>& vertices)
     for (int i = 0; i < objMesh.GetFacesNum(); ++i)
     {
         Face& face = objMesh.GetFace(i);
-        Vector3D v1 = vertices[face.vertexIndexes[1]].GetPosition() -
+        Vector3D v1 = vertices[face.vertexIndexes[2]].GetPosition() -
                 vertices[face.vertexIndexes[0]].GetPosition();
-        Vector3D v2 = vertices[face.vertexIndexes[2]].GetPosition() -
+        Vector3D v2 = vertices[face.vertexIndexes[1]].GetPosition() -
                 vertices[face.vertexIndexes[0]].GetPosition();
         face.normal = Vector3D::CrossProduct(v1, v2).GetNormalized();
     }
@@ -156,8 +171,12 @@ QList<Vertex> WorldWidget::VerticesToCoordSystem(const QList<Vertex>& vertices)
     return val;
 }
 
-void WorldWidget::fillTriangle(Vertex v1, Vertex v2, Vertex v3, const QColor &color)
+void WorldWidget::fillTriangle(const Vertex& vert1, const Vertex& vert2, const Vertex& vert3, const QColor &color)
 {
+    Vertex v1 = vert1;
+    Vertex v2 = vert2;
+    Vertex v3 = vert3;
+
     if (v2.GetPosition().GetY() < v1.GetPosition().GetY()) Tools::swap<Vertex>(v1, v2);
     if (v3.GetPosition().GetY() < v1.GetPosition().GetY()) Tools::swap<Vertex>(v1, v3);
     if (v3.GetPosition().GetY() < v2.GetPosition().GetY()) Tools::swap<Vertex>(v3, v2);
@@ -174,17 +193,29 @@ void WorldWidget::fillTriangle(Vertex v1, Vertex v2, Vertex v3, const QColor &co
 
     if (dy1 != 0)
     {
-        for (int i = static_cast<int>(v1.GetPosition().GetY()); i <= static_cast<int>(v2.GetPosition().GetY()); i++)
+        int y1 = static_cast<int>(v1.GetPosition().GetY());
+        int y2 = static_cast<int>(v2.GetPosition().GetY());
+
+        if (y1 < 0) y1 = 0;
+        if (y2 >= height()) y2 = height() - 1;
+        if (y2 < 0) y2 = 0;
+        if (y1 >= height())
+        {
+            y1 = 0;
+            y2 = 0;
+        }
+
+        for (int i = y1; i <= y2; i++)
         {
             int ax = static_cast<int>(v1.GetPosition().GetX() + (i - v1.GetPosition().GetY()) * daxStep);
             int bx = static_cast<int>(v1.GetPosition().GetX() + (i - v1.GetPosition().GetY()) * dbxStep);
 
-            if (ax > bx)
-            {
-                int temp = ax;
-                ax = bx;
-                bx = temp;
-            }
+            if (ax > bx) Tools::swap<int>(ax, bx);
+
+            if (ax < 0) ax = 0;
+            if (bx >= width()) bx = width() - 1;
+            if (bx < 0) break;
+            if (ax >= width()) break;
 
             for (int j = ax; j < bx; j++)
             {
@@ -204,17 +235,29 @@ void WorldWidget::fillTriangle(Vertex v1, Vertex v2, Vertex v3, const QColor &co
 
     if (dy1 != 0)
     {
-        for (int i = static_cast<int>(v2.GetPosition().GetY()); i <= static_cast<int>(v3.GetPosition().GetY()); i++)
+        int y1 = static_cast<int>(v2.GetPosition().GetY());
+        int y2 = static_cast<int>(v3.GetPosition().GetY());
+
+        if (y1 < 0) y1 = 0;
+        if (y2 >= height()) y2 = height() - 1;
+        if (y2 < 0) y2 = 0;
+        if (y1 >= height())
+        {
+            y1 = 0;
+            y2 = 0;
+        }
+
+        for (int i = y1; i <= y2; i++)
         {
             int ax = static_cast<int>(v2.GetPosition().GetX() + (i - v2.GetPosition().GetY()) * daxStep);
             int bx = static_cast<int>(v1.GetPosition().GetX() + (i - v1.GetPosition().GetY()) * dbxStep);
 
-            if (ax > bx)
-            {
-                int temp = ax;
-                ax = bx;
-                bx = temp;
-            }
+            if (ax > bx) Tools::swap<int>(ax, bx);
+
+            if (ax < 0) ax = 0;
+            if (bx >= width()) bx = width() - 1;
+            if (bx < 0) break;
+            if (ax >= width()) break;
 
             for (int j = ax; j < bx; j++)
             {
@@ -365,7 +408,7 @@ void WorldWidget::redraw()
 
 void WorldWidget::redrawThread()
 {
-    m_drawMutex.lock();
+    std::lock_guard<std::mutex> lock(m_drawMutex);
     switch (m_drawModel)
     {
     case WIREFRAME:
@@ -378,5 +421,4 @@ void WorldWidget::redrawThread()
     drawMisc();
     *m_renderBuffer = m_drawBuffer->copy();
     update();
-    m_drawMutex.unlock();
 }

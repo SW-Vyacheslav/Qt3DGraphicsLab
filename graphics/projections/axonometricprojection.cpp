@@ -8,9 +8,13 @@ AxonometricProjection::AxonometricProjection(const float& alphaAngle, const floa
     m_projectionMatrix.SetElementAt(0, 1, sinf(Tools::degToRad(betaAngle)) * sinf(Tools::degToRad(alphaAngle)));
     m_projectionMatrix.SetElementAt(1, 1, cosf(Tools::degToRad(betaAngle)));
     m_projectionMatrix.SetElementAt(2, 0, sinf(Tools::degToRad(alphaAngle)));
-    m_projectionMatrix.SetElementAt(2, 1, -sinf(Tools::degToRad(betaAngle)) * cosf(Tools::degToRad(alphaAngle)));
-    m_projectionMatrix.SetElementAt(2, 2, 1.0f);
+    m_projectionMatrix.SetElementAt(2, 1, -(cosf(Tools::degToRad(alphaAngle) * sinf(Tools::degToRad(betaAngle)))));
     m_projectionMatrix.SetElementAt(3, 3, 1.0f);
+
+    //for z buffer
+    m_projectionMatrix.SetElementAt(2, 2, cosf(Tools::degToRad(betaAngle)));
+    m_projectionMatrix.SetElementAt(1, 2, (cosf(Tools::degToRad(alphaAngle) * sinf(Tools::degToRad(betaAngle)))));
+    m_projectionMatrix.SetElementAt(0, 2, sinf(Tools::degToRad(betaAngle)) * sinf(Tools::degToRad(alphaAngle)));
 }
 
 QList<Vertex> AxonometricProjection::Project(const QList<Vertex> &vertices)

@@ -21,6 +21,7 @@ public:
 private:
     Thorus& getThorus();
     void updateTransformWidgets();
+    void closeEvent(QCloseEvent *event) override;
 
 public slots:
     void generateObject();
