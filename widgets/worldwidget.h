@@ -9,6 +9,7 @@
 #include "graphics/projections/projection.h"
 #include "graphics/components/zbuffer.h"
 #include "math/Vector2D.h"
+#include "graphics/components/light.h"
 #include <mutex>
 
 class WorldWidget : public QWidget
@@ -26,6 +27,14 @@ public:
 
     WorldObject& GetWorldObject();
     void SetProjection(Projection* projection);
+
+    void SetAmbientColor(const ColorN& color);
+    void SetAmbientMaterialReflection(const ColorN& matRefl);
+    void SetDiffuseColor(const ColorN& color);
+    void SetDiffuseMaterialReflection(const ColorN& matRefl);
+    void SetSpecularColor(const ColorN& color);
+    void SetSpecularMaterialReflection(const ColorN& matRefl);
+    void SetShininess(const int& shininess);
 
 public slots:
     void SetDrawModel(const DrawModel& drawModel);
@@ -54,11 +63,18 @@ private:
     WorldObject* m_worldObject;
     Projection* m_projection;
     ZBuffer* m_zBuffer;
-    Vector2D m_coordSysCenter;
-    Vector3D m_light;
-    DrawModel m_drawModel;
     QImage* m_renderBuffer;
     QImage* m_drawBuffer;
+    Vector2D m_coordSysCenter;
+    DrawModel m_drawModel;
+    Light m_light;
+    ColorN m_ambientColor;
+    ColorN m_diffuseColor;
+    ColorN m_specularColor;
+    ColorN m_ambientMaterialReflection;
+    ColorN m_diffuseMaterialReflection;
+    ColorN m_specularMaterialReflection;
+    int m_shininess;
     std::mutex m_drawMutex;
 };
 

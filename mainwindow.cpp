@@ -78,6 +78,34 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->wireframeRadioButton, &QRadioButton::clicked, this, &MainWindow::drawModelChanged);
     connect(ui->surfaceRadioButton, &QRadioButton::clicked, this, &MainWindow::drawModelChanged);
 
+    connect(ui->arSlider, &QSlider::valueChanged, this, &MainWindow::ambientLightValueChanged);
+    connect(ui->agSlider, &QSlider::valueChanged, this, &MainWindow::ambientLightValueChanged);
+    connect(ui->abSlider, &QSlider::valueChanged, this, &MainWindow::ambientLightValueChanged);
+    connect(ui->amrSlider, &QSlider::valueChanged, this, &MainWindow::ambientLightValueChanged);
+    connect(ui->drSlider, &QSlider::valueChanged, this, &MainWindow::diffuseLightValueChanged);
+    connect(ui->dgSlider, &QSlider::valueChanged, this, &MainWindow::diffuseLightValueChanged);
+    connect(ui->dbSlider, &QSlider::valueChanged, this, &MainWindow::diffuseLightValueChanged);
+    connect(ui->dmrSlider, &QSlider::valueChanged, this, &MainWindow::diffuseLightValueChanged);
+    connect(ui->srSlider, &QSlider::valueChanged, this, &MainWindow::specularLightValueChanged);
+    connect(ui->sgSlider, &QSlider::valueChanged, this, &MainWindow::specularLightValueChanged);
+    connect(ui->sbSlider, &QSlider::valueChanged, this, &MainWindow::specularLightValueChanged);
+    connect(ui->smrSlider, &QSlider::valueChanged, this, &MainWindow::specularLightValueChanged);
+    connect(ui->shininessSlider, &QSlider::valueChanged, this, &MainWindow::specularLightValueChanged);
+
+    connect(ui->arSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->agSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->abSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->amrSlider, &QSlider::sliderReleased,m_worldWidget, &WorldWidget::redraw);
+    connect(ui->drSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->dgSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->dbSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->dmrSlider, &QSlider::sliderReleased,m_worldWidget, &WorldWidget::redraw);
+    connect(ui->srSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->sgSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->sbSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+    connect(ui->smrSlider, &QSlider::sliderReleased,m_worldWidget, &WorldWidget::redraw);
+    connect(ui->shininessSlider, &QSlider::sliderReleased, m_worldWidget, &WorldWidget::redraw);
+
     Thorus* thorus = static_cast<Thorus*>(&m_worldWidget->GetWorldObject());
     thorus->SetBaseApprox(ui->mVal->value());
     thorus->SetGeneratrixApprox(ui->nVal->value());
@@ -187,4 +215,85 @@ void MainWindow::drawModelChanged()
         m_worldWidget->SetDrawModel(WorldWidget::WIREFRAME);
     else if (ui->surfaceRadioButton->isChecked())
         m_worldWidget->SetDrawModel(WorldWidget::SURFACE);
+}
+
+void MainWindow::ambientLightValueChanged(int)
+{
+    float rVal = ui->arSlider->value() / 100.0f;
+    float gVal = ui->agSlider->value() / 100.0f;
+    float bVal = ui->abSlider->value() / 100.0f;
+    float mrVal = ui->amrSlider->value() / 100.0f;
+
+    ColorN color;
+    color.setRed(rVal);
+    color.setGreen(gVal);
+    color.setBlue(bVal);
+
+    ColorN reflect;
+    reflect.setRed(mrVal);
+    reflect.setGreen(mrVal);
+    reflect.setBlue(mrVal);
+
+    m_worldWidget->SetAmbientColor(color);
+    m_worldWidget->SetAmbientMaterialReflection(reflect);
+
+    ui->arLabel->setText(QString::number(static_cast<double>(rVal)));
+    ui->agLabel->setText(QString::number(static_cast<double>(gVal)));
+    ui->abLabel->setText(QString::number(static_cast<double>(bVal)));
+    ui->amrLabel->setText(QString::number(static_cast<double>(mrVal)));
+}
+
+void MainWindow::diffuseLightValueChanged(int)
+{
+    float rVal = ui->drSlider->value() / 100.0f;
+    float gVal = ui->dgSlider->value() / 100.0f;
+    float bVal = ui->dbSlider->value() / 100.0f;
+    float mrVal = ui->dmrSlider->value() / 100.0f;
+
+    ColorN color;
+    color.setRed(rVal);
+    color.setGreen(gVal);
+    color.setBlue(bVal);
+
+    ColorN reflect;
+    reflect.setRed(mrVal);
+    reflect.setGreen(mrVal);
+    reflect.setBlue(mrVal);
+
+    m_worldWidget->SetDiffuseColor(color);
+    m_worldWidget->SetDiffuseMaterialReflection(reflect);
+
+    ui->drLabel->setText(QString::number(static_cast<double>(rVal)));
+    ui->dgLabel->setText(QString::number(static_cast<double>(gVal)));
+    ui->dbLabel->setText(QString::number(static_cast<double>(bVal)));
+    ui->dmrLabel->setText(QString::number(static_cast<double>(mrVal)));
+}
+
+void MainWindow::specularLightValueChanged(int)
+{
+    float rVal = ui->srSlider->value() / 100.0f;
+    float gVal = ui->sgSlider->value() / 100.0f;
+    float bVal = ui->sbSlider->value() / 100.0f;
+    float mrVal = ui->smrSlider->value() / 100.0f;
+    int shininessVal = ui->shininessSlider->value();
+
+    ColorN color;
+    color.setRed(rVal);
+    color.setGreen(gVal);
+    color.setBlue(bVal);
+
+    ColorN reflect;
+    reflect.setRed(mrVal);
+    reflect.setGreen(mrVal);
+    reflect.setBlue(mrVal);
+
+    m_worldWidget->SetSpecularColor(color);
+    m_worldWidget->SetSpecularMaterialReflection(reflect);
+    m_worldWidget->SetShininess(shininessVal);
+
+    ui->srLabel->setText(QString::number(static_cast<double>(rVal)));
+    ui->sgLabel->setText(QString::number(static_cast<double>(gVal)));
+    ui->sbLabel->setText(QString::number(static_cast<double>(bVal)));
+    ui->smrLabel->setText(QString::number(static_cast<double>(mrVal)));
+    ui->shininessLabel->setText(QString::number(shininessVal));
 }

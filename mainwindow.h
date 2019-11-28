@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() override;
 
 private:
     Thorus& getThorus();
@@ -35,6 +35,9 @@ public slots:
     void setObliqueProjection();
     void setPerspectiveProjection();
     void drawModelChanged();
+    void ambientLightValueChanged(int val);
+    void diffuseLightValueChanged(int val);
+    void specularLightValueChanged(int val);
 
 private:
     Ui::MainWindow *ui;

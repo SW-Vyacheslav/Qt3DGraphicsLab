@@ -12,13 +12,15 @@ WorldWidget::WorldWidget(QWidget *parent) :
     m_worldObject(new Thorus()),
     m_projection(new FrontalProjection()),
     m_zBuffer(new ZBuffer(width(), height())),
-    m_drawModel(WIREFRAME),
     m_renderBuffer(new QImage(width(), height(), QImage::Format_RGB32)),
-    m_drawBuffer(new QImage(width(), height(), QImage::Format_RGB32))
+    m_drawBuffer(new QImage(width(), height(), QImage::Format_RGB32)),
+    m_drawModel(WIREFRAME),
+    m_shininess(1)
 {
     connect(&m_worldObject->GetTransform(), SIGNAL(OnStateChanged()), this, SLOT(redraw()));
     m_zBuffer->Clear();
     m_renderBuffer->fill(Qt::black);
+    m_drawBuffer->fill(Qt::black);
 }
 
 WorldWidget::~WorldWidget()
@@ -57,13 +59,14 @@ void WorldWidget::resizeEvent(QResizeEvent *event)
 
 void WorldWidget::drawObjectSurface()
 {
-    m_drawBuffer->fill(Qt::black);
     Thorus* thorus = static_cast<Thorus*>(m_worldObject);
     Mesh& objMesh = thorus->GetMesh();
+    if (objMesh.GetVerticesNum() == 0) return;
     QList<Vertex> posVerts = transformVertices(objMesh.GetVertices());
     recalculateNormals(posVerts);
     QList<Vertex> screenVerts = VerticesToCoordSystem(m_projection->Project(posVerts));
     m_zBuffer->Clear();
+    m_drawBuffer->fill(Qt::black);
     for (int i = 0; i < objMesh.GetFacesNum(); ++i)
     {
         Face& face = objMesh.GetFace(i);
@@ -72,20 +75,35 @@ void WorldWidget::drawObjectSurface()
                 posVerts[face.vertexIndexes[1]].GetPosition() +
                 posVerts[face.vertexIndexes[2]].GetPosition()) *
                 (1.0f/3.0f);
-        Vector3D lightDir = (m_light - vertPos).GetNormalized();
-        float dotProd = Vector3D::DotProduct(lightDir, face.normal);
-        float diffuseReflCoef = 1.0f;
-        float lightIntens = 100.0f;
-        int reflLightIntens = static_cast<int>(lightIntens * diffuseReflCoef * Tools::clamp(dotProd, 0.0f, 1.0f));
-        QColor col;
-        col.setHsl(120, 100, reflLightIntens);
-        col.toRgb();
-        face.color = qRgb(col.red(), col.green(), col.blue());
+        Vector3D lightDir = m_light.getPosition() - vertPos;
+        Vector3D reflDir = -lightDir - face.normal * Vector3D::DotProduct(-lightDir, face.normal) * 2;
+        Vector3D viewDir = -vertPos;
+
+        float dotProd = Vector3D::DotProduct(lightDir.GetNormalized(), face.normal.GetNormalized());
+        dotProd = Tools::clamp(dotProd, 0.0f, 1.0f);
+
+        float reflDotProd = Vector3D::DotProduct(reflDir.GetNormalized(), viewDir.GetNormalized());
+        reflDotProd = Tools::clamp(reflDotProd, 0.0f, 1.0f);
+
+        float red = m_ambientColor.getRed() * m_ambientMaterialReflection.getRed() +
+                m_diffuseColor.getRed() * m_diffuseMaterialReflection.getRed() * dotProd +
+                m_specularColor.getRed() * m_specularMaterialReflection.getRed() * powf(reflDotProd, m_shininess);
+
+        float green = m_ambientColor.getGreen() * m_ambientMaterialReflection.getGreen() +
+                m_diffuseColor.getGreen() * m_diffuseMaterialReflection.getGreen() * dotProd +
+                m_specularColor.getGreen() * m_specularMaterialReflection.getGreen() * powf(reflDotProd, m_shininess);
+
+        float blue = m_ambientColor.getBlue() * m_ambientMaterialReflection.getBlue() +
+                m_diffuseColor.getBlue() * m_diffuseMaterialReflection.getBlue() * dotProd +
+                m_specularColor.getBlue() * m_specularMaterialReflection.getBlue() * powf(reflDotProd, static_cast<float>(m_shininess));
+
+        face.color = qRgb(static_cast<int>(Tools::scaleInRange(red, 0, 3, 0, 255)),
+                          static_cast<int>(Tools::scaleInRange(green, 0, 3, 0, 255)),
+                          static_cast<int>(Tools::scaleInRange(blue, 0, 3, 0, 255)));
         fillTriangle(screenVerts[face.vertexIndexes[0]],
                 screenVerts[face.vertexIndexes[1]],
                 screenVerts[face.vertexIndexes[2]],
                 face.color);
-
     }
 }
 
@@ -93,6 +111,7 @@ void WorldWidget::drawObjectWireframe()
 {
     Thorus* thorus = static_cast<Thorus*>(m_worldObject);
     Mesh& objMesh = thorus->GetMesh();
+    if (objMesh.GetVerticesNum() == 0) return;
     QList<Vertex> verts = VerticesToCoordSystem(m_projection->Project(transformVertices(objMesh.GetVertices())));
     m_drawBuffer->fill(Qt::black);
     for (int i = 0; i < objMesh.GetEdgesNum(); i++)
@@ -113,7 +132,7 @@ void WorldWidget::drawObjectWireframe()
 void WorldWidget::drawMisc()
 {
     Vertex lightPos;
-    lightPos.SetPosition(m_light);
+    lightPos.SetPosition(m_light.getPosition());
     QList<Vertex> verts = VerticesToCoordSystem(m_projection->Project({lightPos}));
     fillRect(static_cast<int>(verts[0].GetPosition().GetX()) - 5, static_cast<int>(verts[0].GetPosition().GetY()) - 5, 10, 10, Qt::yellow);
 }
@@ -153,7 +172,7 @@ void WorldWidget::recalculateNormals(const QList<Vertex>& vertices)
                 vertices[face.vertexIndexes[0]].GetPosition();
         Vector3D v2 = vertices[face.vertexIndexes[1]].GetPosition() -
                 vertices[face.vertexIndexes[0]].GetPosition();
-        face.normal = Vector3D::CrossProduct(v1, v2).GetNormalized();
+        face.normal = Vector3D::CrossProduct(v1, v2);
     }
 }
 
@@ -196,9 +215,10 @@ void WorldWidget::fillTriangle(const Vertex& vert1, const Vertex& vert2, const V
         int y1 = static_cast<int>(v1.GetPosition().GetY());
         int y2 = static_cast<int>(v2.GetPosition().GetY());
 
+        //optimization for out of bound drawing by y
         if (y1 < 0) y1 = 0;
-        if (y2 >= height()) y2 = height() - 1;
         if (y2 < 0) y2 = 0;
+        if (y2 >= height()) y2 = height() - 1;
         if (y1 >= height())
         {
             y1 = 0;
@@ -212,6 +232,7 @@ void WorldWidget::fillTriangle(const Vertex& vert1, const Vertex& vert2, const V
 
             if (ax > bx) Tools::swap<int>(ax, bx);
 
+            //optimization for out of bound drawing by x
             if (ax < 0) ax = 0;
             if (bx >= width()) bx = width() - 1;
             if (bx < 0) break;
@@ -238,9 +259,10 @@ void WorldWidget::fillTriangle(const Vertex& vert1, const Vertex& vert2, const V
         int y1 = static_cast<int>(v2.GetPosition().GetY());
         int y2 = static_cast<int>(v3.GetPosition().GetY());
 
+        //optimization for out of bound drawing by y
         if (y1 < 0) y1 = 0;
-        if (y2 >= height()) y2 = height() - 1;
         if (y2 < 0) y2 = 0;
+        if (y2 >= height()) y2 = height() - 1;
         if (y1 >= height())
         {
             y1 = 0;
@@ -254,6 +276,7 @@ void WorldWidget::fillTriangle(const Vertex& vert1, const Vertex& vert2, const V
 
             if (ax > bx) Tools::swap<int>(ax, bx);
 
+            //optimization for out of bound drawing by x
             if (ax < 0) ax = 0;
             if (bx >= width()) bx = width() - 1;
             if (bx < 0) break;
@@ -388,6 +411,41 @@ void WorldWidget::SetProjection(Projection *projection)
     redraw();
 }
 
+void WorldWidget::SetAmbientColor(const ColorN &color)
+{
+    m_ambientColor = color;
+}
+
+void WorldWidget::SetAmbientMaterialReflection(const ColorN &matRefl)
+{
+    m_ambientMaterialReflection = matRefl;
+}
+
+void WorldWidget::SetDiffuseColor(const ColorN &color)
+{
+    m_diffuseColor = color;
+}
+
+void WorldWidget::SetDiffuseMaterialReflection(const ColorN &matRefl)
+{
+    m_diffuseMaterialReflection = matRefl;
+}
+
+void WorldWidget::SetSpecularColor(const ColorN &color)
+{
+    m_specularColor = color;
+}
+
+void WorldWidget::SetSpecularMaterialReflection(const ColorN &matRefl)
+{
+    m_specularMaterialReflection = matRefl;
+}
+
+void WorldWidget::SetShininess(const int &shininess)
+{
+    m_shininess = shininess;
+}
+
 void WorldWidget::SetDrawModel(const WorldWidget::DrawModel &drawModel)
 {
     m_drawModel = drawModel;
@@ -396,7 +454,7 @@ void WorldWidget::SetDrawModel(const WorldWidget::DrawModel &drawModel)
 
 void WorldWidget::SetLight(const Vector3D &light)
 {
-    m_light = light;
+    m_light.setPosition(light);
     redraw();
 }
 

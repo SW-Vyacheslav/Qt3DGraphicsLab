@@ -31,6 +31,21 @@ float ColorN::getBlue() const
     return m_blue;
 }
 
+void ColorN::setRed(const float &red)
+{
+    m_red = Tools::clamp(red, 0.0f, 1.0f);
+}
+
+void ColorN::setGreen(const float &green)
+{
+    m_green = Tools::clamp(green, 0.0f, 1.0f);
+}
+
+void ColorN::setBlue(const float &blue)
+{
+    m_blue = Tools::clamp(blue, 0.0f, 1.0f);
+}
+
 QRgb ColorN::toRgb()
 {
     return qRgb(static_cast<int>(Tools::scaleInRange(m_red, 0, 1, 0, 255)),
