@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>3DGraphics</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGroupBox" name="objectGroupBox">
@@ -20,116 +20,112 @@
       <x>10</x>
       <y>10</y>
       <width>311</width>
-      <height>81</height>
+      <height>83</height>
      </rect>
     </property>
     <property name="title">
      <string>Object</string>
     </property>
-    <widget class="QPushButton" name="generateButton">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>22</y>
-       <width>75</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Generate</string>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QWidget" name="formLayoutWidget_2">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>211</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QLabel" name="rLabel">
-        <property name="toolTip">
-         <string>Radius of generatix circle</string>
-        </property>
-        <property name="text">
-         <string>r:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="rVal"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="nLabel">
-        <property name="toolTip">
-         <string>Approximation of generatix circle</string>
-        </property>
-        <property name="text">
-         <string>n:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="nVal"/>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="horizontalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>211</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="RLabel">
-        <property name="toolTip">
-         <string>Radius of thorus circle</string>
-        </property>
-        <property name="text">
-         <string>R:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="RVal"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="mLabel">
-        <property name="toolTip">
-         <string>Approximation of thorus circle</string>
-        </property>
-        <property name="text">
-         <string>m:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="mVal"/>
-      </item>
-     </layout>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout_7">
+     <item row="1" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="rLabel">
+           <property name="toolTip">
+            <string>Radius of generatix circle</string>
+           </property>
+           <property name="text">
+            <string>r:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="rVal"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="nLabel">
+           <property name="toolTip">
+            <string>Approximation of generatix circle</string>
+           </property>
+           <property name="text">
+            <string>n:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="nVal"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="RLabel">
+           <property name="toolTip">
+            <string>Radius of thorus circle</string>
+           </property>
+           <property name="text">
+            <string>R:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="RVal"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="mLabel">
+           <property name="toolTip">
+            <string>Approximation of thorus circle</string>
+           </property>
+           <property name="text">
+            <string>m:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="mVal"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="generateButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>500</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Generate</string>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
    <widget class="QGroupBox" name="outputGroupBox">
     <property name="geometry">
@@ -372,7 +368,7 @@
      <item row="2" column="0">
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="transformTab">
         <attribute name="title">

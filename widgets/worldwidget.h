@@ -27,6 +27,7 @@ public:
 
     WorldObject& GetWorldObject();
     void SetProjection(Projection* projection);
+    void SetProjectionMatrix(const ProjectionMatrix& projMat);
 
     void SetAmbientColor(const ColorN& color);
     void SetAmbientMaterialReflection(const ColorN& matRefl);
@@ -50,7 +51,11 @@ private:
     void drawLine(const int& x1, const int& y1, const int& x2, const int& y2, const QColor& color);
     void drawPixel(const int& x, const int& y, const QColor& color);
 
+    QRgb GetObjectLightningColor(const float& dotProd, const float& reflectDotProd);
+
+    __declspec(deprecated)
     void drawObjectSurface();
+    void drawObjectSurface2();
     void drawObjectWireframe();
     void drawMisc();
     void redrawThread();
@@ -62,6 +67,7 @@ private:
 private:
     WorldObject* m_worldObject;
     Projection* m_projection;
+    ProjectionMatrix m_projectionMatrix;
     ZBuffer* m_zBuffer;
     QImage* m_renderBuffer;
     QImage* m_drawBuffer;

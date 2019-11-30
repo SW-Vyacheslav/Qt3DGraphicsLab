@@ -21,6 +21,7 @@ WorldWidget::WorldWidget(QWidget *parent) :
     m_zBuffer->Clear();
     m_renderBuffer->fill(Qt::black);
     m_drawBuffer->fill(Qt::black);
+    m_projectionMatrix = Projection::CreateFrontalMatrix();
 }
 
 WorldWidget::~WorldWidget()
@@ -85,24 +86,65 @@ void WorldWidget::drawObjectSurface()
         float reflDotProd = Vector3D::DotProduct(reflDir.GetNormalized(), viewDir.GetNormalized());
         reflDotProd = Tools::clamp(reflDotProd, 0.0f, 1.0f);
 
-        float red = m_ambientColor.getRed() * m_ambientMaterialReflection.getRed() +
-                m_diffuseColor.getRed() * m_diffuseMaterialReflection.getRed() * dotProd +
-                m_specularColor.getRed() * m_specularMaterialReflection.getRed() * powf(reflDotProd, m_shininess);
-
-        float green = m_ambientColor.getGreen() * m_ambientMaterialReflection.getGreen() +
-                m_diffuseColor.getGreen() * m_diffuseMaterialReflection.getGreen() * dotProd +
-                m_specularColor.getGreen() * m_specularMaterialReflection.getGreen() * powf(reflDotProd, m_shininess);
-
-        float blue = m_ambientColor.getBlue() * m_ambientMaterialReflection.getBlue() +
-                m_diffuseColor.getBlue() * m_diffuseMaterialReflection.getBlue() * dotProd +
-                m_specularColor.getBlue() * m_specularMaterialReflection.getBlue() * powf(reflDotProd, static_cast<float>(m_shininess));
-
-        face.color = qRgb(static_cast<int>(Tools::scaleInRange(red, 0, 3, 0, 255)),
-                          static_cast<int>(Tools::scaleInRange(green, 0, 3, 0, 255)),
-                          static_cast<int>(Tools::scaleInRange(blue, 0, 3, 0, 255)));
+        face.color = GetObjectLightningColor(dotProd, reflDotProd);
         fillTriangle(screenVerts[face.vertexIndexes[0]],
                 screenVerts[face.vertexIndexes[1]],
                 screenVerts[face.vertexIndexes[2]],
+                face.color);
+    }
+}
+
+void WorldWidget::drawObjectSurface2()
+{
+    Thorus* thorus = static_cast<Thorus*>(m_worldObject);
+    Mesh& objMesh = thorus->GetMesh();
+    if (objMesh.GetVerticesNum() == 0) return;
+    QList<Vertex> posVerts = transformVertices(objMesh.GetVertices());
+    recalculateNormals(posVerts);
+    QList<Vertex> projectedVerts;
+    for (int i = 0; i < posVerts.length(); ++i)
+    {
+        Vertex projVert;
+        Vector3D projVec;
+        if (m_projectionMatrix.type == ProjectionMatrix::PERSPECTIVE)
+        {
+            float zBuf;
+            projVec = posVerts[i].GetPosition() * m_projectionMatrix.viewTransformMatrix;
+            zBuf = projVec.GetZ();
+            projVec *= m_projectionMatrix.projectionMatrix;
+            projVec.ToCartesian();
+            projVec.SetZ(zBuf);
+        }
+        else
+            projVec = posVerts[i].GetPosition() * m_projectionMatrix.projectionMatrix;
+        projVert.SetPosition(projVec);
+        projectedVerts.append(projVert);
+    }
+    projectedVerts = VerticesToCoordSystem(projectedVerts);
+    m_zBuffer->Clear();
+    m_drawBuffer->fill(Qt::black);
+    for (int i = 0; i < objMesh.GetFacesNum(); ++i)
+    {
+        Face& face = objMesh.GetFace(i);
+        Vector3D vertPos = (
+                posVerts[face.vertexIndexes[0]].GetPosition() +
+                posVerts[face.vertexIndexes[1]].GetPosition() +
+                posVerts[face.vertexIndexes[2]].GetPosition()) *
+                (1.0f/3.0f);
+        Vector3D lightDir = m_light.getPosition() - vertPos;
+        Vector3D reflDir = -lightDir - face.normal * Vector3D::DotProduct(-lightDir, face.normal) * 2;
+        Vector3D viewDir = m_projectionMatrix.viewPosition - vertPos;
+
+        float dotProd = Vector3D::DotProduct(lightDir.GetNormalized(), face.normal.GetNormalized());
+        dotProd = Tools::clamp(dotProd, 0.0f, 1.0f);
+
+        float reflDotProd = Vector3D::DotProduct(reflDir.GetNormalized(), viewDir.GetNormalized());
+        reflDotProd = Tools::clamp(reflDotProd, 0.0f, 1.0f);
+
+        face.color = GetObjectLightningColor(dotProd, reflDotProd);
+        fillTriangle(projectedVerts[face.vertexIndexes[0]],
+                projectedVerts[face.vertexIndexes[1]],
+                projectedVerts[face.vertexIndexes[2]],
                 face.color);
     }
 }
@@ -399,6 +441,25 @@ void WorldWidget::drawPixel(const int &x, const int &y, const QColor &color)
     m_drawBuffer->setPixelColor(x, y, color);
 }
 
+QRgb WorldWidget::GetObjectLightningColor(const float &dotProd, const float &reflectDotProd)
+{
+    float red = m_ambientColor.getRed() * m_ambientMaterialReflection.getRed() +
+            m_diffuseColor.getRed() * m_diffuseMaterialReflection.getRed() * dotProd +
+            m_specularColor.getRed() * m_specularMaterialReflection.getRed() * powf(reflectDotProd, m_shininess);
+
+    float green = m_ambientColor.getGreen() * m_ambientMaterialReflection.getGreen() +
+            m_diffuseColor.getGreen() * m_diffuseMaterialReflection.getGreen() * dotProd +
+            m_specularColor.getGreen() * m_specularMaterialReflection.getGreen() * powf(reflectDotProd, m_shininess);
+
+    float blue = m_ambientColor.getBlue() * m_ambientMaterialReflection.getBlue() +
+            m_diffuseColor.getBlue() * m_diffuseMaterialReflection.getBlue() * dotProd +
+            m_specularColor.getBlue() * m_specularMaterialReflection.getBlue() * powf(reflectDotProd, static_cast<float>(m_shininess));
+
+    return qRgb(static_cast<int>(Tools::scaleInRange(red, 0, 3, 0, 255)),
+                              static_cast<int>(Tools::scaleInRange(green, 0, 3, 0, 255)),
+                              static_cast<int>(Tools::scaleInRange(blue, 0, 3, 0, 255)));
+}
+
 WorldObject& WorldWidget::GetWorldObject()
 {
     return *m_worldObject;
@@ -409,6 +470,11 @@ void WorldWidget::SetProjection(Projection *projection)
     delete m_projection;
     m_projection = projection;
     redraw();
+}
+
+void WorldWidget::SetProjectionMatrix(const ProjectionMatrix &projMat)
+{
+    m_projectionMatrix = projMat;
 }
 
 void WorldWidget::SetAmbientColor(const ColorN &color)
@@ -473,7 +539,7 @@ void WorldWidget::redrawThread()
         drawObjectWireframe();
         break;
     case SURFACE:
-        drawObjectSurface();
+        drawObjectSurface2();
         break;
     }
     drawMisc();

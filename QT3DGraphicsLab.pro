@@ -56,6 +56,7 @@ HEADERS  += mainwindow.h \
     graphics/projections/perspectiveprojection.h \
     graphics/projections/profileprojection.h \
     graphics/projections/projection.h \
+    graphics/projections/projectionmatrix.h \
     graphics/thorus.h \
     graphics/projections.h \
     math/Matrix4x4.h \

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "graphics/projections.h"
 #include "widgets/vector3dwidget.h"
+#include "graphics/projections/projectionmatrix.h"
 #include <QAbstractButton>
 #include <QSpinBox>
 
@@ -61,9 +62,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->roVal->setValidator(new QDoubleValidator());
     ui->roVal->setText("1");
     ui->alphaPerVal->setValidator(new QDoubleValidator());
-    ui->alphaPerVal->setText("0");
+    ui->alphaPerVal->setText("90");
     ui->betaPerVal->setValidator(new QDoubleValidator());
-    ui->betaPerVal->setText("0");
+    ui->betaPerVal->setText("180");
 
     connect(ui->generateButton, &QAbstractButton::clicked, this, &MainWindow::generateObject);
     connect(ui->translateButton, &QAbstractButton::clicked, this, &MainWindow::translateObject);
@@ -174,16 +175,19 @@ void MainWindow::rotateObject()
 void MainWindow::setHorizontalProjection()
 {
     m_worldWidget->SetProjection(new HorizontalProjection());
+    m_worldWidget->SetProjectionMatrix(Projection::CreateHorizontalMatrix());
 }
 
 void MainWindow::setFrontalProjection()
 {
     m_worldWidget->SetProjection(new FrontalProjection());
+    m_worldWidget->SetProjectionMatrix(Projection::CreateFrontalMatrix());
 }
 
 void MainWindow::setProfileProjection()
 {
     m_worldWidget->SetProjection(new ProfileProjection());
+    m_worldWidget->SetProjectionMatrix(Projection::CreateProfileMatrix());
 }
 
 void MainWindow::setAxonometricProjection()
@@ -191,6 +195,7 @@ void MainWindow::setAxonometricProjection()
     float alpha = ui->alphaAxVal->text().toFloat();
     float beta = ui->betaAxVal->text().toFloat();
     m_worldWidget->SetProjection(new AxonometricProjection(alpha, beta));
+    m_worldWidget->SetProjectionMatrix(Projection::CreateAxonometrixMatrix(alpha, beta));
 }
 
 void MainWindow::setObliqueProjection()
@@ -198,6 +203,7 @@ void MainWindow::setObliqueProjection()
     float alpha = ui->alphaOblVal->text().toFloat();
     float lVal = ui->lOblVal->text().toFloat();
     m_worldWidget->SetProjection(new ObliqueProjection(alpha, lVal));
+    m_worldWidget->SetProjectionMatrix(Projection::CreateObliqueMatrix(alpha, lVal));
 }
 
 void MainWindow::setPerspectiveProjection()
@@ -207,6 +213,7 @@ void MainWindow::setPerspectiveProjection()
     float alpha = ui->alphaPerVal->text().toFloat();
     float beta = ui->betaPerVal->text().toFloat();
     m_worldWidget->SetProjection(new PerspectiveProjection(dVal, roVal, alpha, beta));
+    m_worldWidget->SetProjectionMatrix(Projection::CreatePerspectiveMatrix(dVal, roVal, alpha, beta));
 }
 
 void MainWindow::drawModelChanged()
