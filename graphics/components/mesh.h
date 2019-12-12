@@ -11,6 +11,14 @@ class Mesh
 public:
     Mesh();
 
+    enum NormalType
+    {
+        CW,
+        CCW
+    };
+
+    static Mesh ReadFromObjFile(const QString& filepath);
+
     void AddVertex(const Vertex& vertex);
     void AddEdge(const Edge& edge);
     void AddFace(const Face& face);
@@ -27,16 +35,20 @@ public:
 
     Vertex& GetVertex(const int& index);
     Edge& GetEdge(const int& index);
-    Face& GetFace(const int& index);
+    Face& GetFace(const int& index);    
 
     int GetVerticesNum() const;
     int GetEdgesNum() const;
     int GetFacesNum() const;
 
+    void SetNormalType(const NormalType& nt);
+    NormalType GetNormalType() const;
+
 private:
     QList<Vertex> m_vertices;
     QList<Edge> m_edges;
     QList<Face> m_faces;
+    NormalType m_normalType;
 };
 
 #endif // MESH_H

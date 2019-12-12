@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <thread>
 #include <math.h>
+#include <stack>
 #include "graphics/thorus.h"
 #include "graphics/projections.h"
 #include "graphics/components/transformmatrixcreator.h"
@@ -173,10 +174,14 @@ void WorldWidget::drawObjectWireframe()
 
 void WorldWidget::drawMisc()
 {
-    Vertex lightPos;
-    lightPos.SetPosition(m_light.getPosition());
-    QList<Vertex> verts = VerticesToCoordSystem(m_projection->Project({lightPos}));
-    fillRect(static_cast<int>(verts[0].GetPosition().GetX()) - 5, static_cast<int>(verts[0].GetPosition().GetY()) - 5, 10, 10, Qt::yellow);
+    Vector3D lpos = m_light.getPosition();
+    if (m_projectionMatrix.type == ProjectionMatrix::PERSPECTIVE) lpos *= m_projectionMatrix.viewTransformMatrix;
+    lpos *= m_projectionMatrix.projectionMatrix;
+    if (m_projectionMatrix.type == ProjectionMatrix::PROFILE) lpos.SetZ(-lpos.GetZ());
+    Vertex vert;
+    vert.SetPosition(lpos);
+    lpos = VerticesToCoordSystem({vert})[0].GetPosition();
+    fillRect(static_cast<int>(lpos.GetX()) - 5, static_cast<int>(lpos.GetY()) - 5, 10, 10, Qt::yellow);
 }
 
 QList<Vertex> WorldWidget::transformVertices(const QList<Vertex> &vertices)
@@ -210,11 +215,14 @@ void WorldWidget::recalculateNormals(const QList<Vertex>& vertices)
     for (int i = 0; i < objMesh.GetFacesNum(); ++i)
     {
         Face& face = objMesh.GetFace(i);
-        Vector3D v1 = vertices[face.vertexIndexes[2]].GetPosition() -
+        Vector3D v1 = vertices[face.vertexIndexes[1]].GetPosition() -
                 vertices[face.vertexIndexes[0]].GetPosition();
-        Vector3D v2 = vertices[face.vertexIndexes[1]].GetPosition() -
+        Vector3D v2 = vertices[face.vertexIndexes[2]].GetPosition() -
                 vertices[face.vertexIndexes[0]].GetPosition();
-        face.normal = Vector3D::CrossProduct(v1, v2);
+        if (objMesh.GetNormalType() == Mesh::CW)
+            face.normal = Vector3D::CrossProduct(v2, v1);
+        else if (objMesh.GetNormalType() == Mesh::CCW)
+            face.normal = Vector3D::CrossProduct(v1, v2);
     }
 }
 

@@ -9,7 +9,10 @@ Thorus::Thorus():
     m_generatrixApprox(1),
     m_baseRadius(1),
     m_generatrixRadius(1)
-{}
+{
+    m_mesh = Mesh::ReadFromObjFile("C:\\Users\\Vuacheslav\\Desktop\\gear.obj");
+    m_mesh.SetNormalType(Mesh::CCW);
+}
 
 Thorus::Thorus(const int& baseApprox,
                const int& generatrixApprox,
@@ -24,7 +27,8 @@ Thorus::Thorus(const int& baseApprox,
 
 void Thorus::Construct()
 {
-    GetMesh().Clear();
+    m_mesh.SetNormalType(Mesh::CW);
+    m_mesh.Clear();
 
     float RStep = 360.0f / m_baseApprox;
     float rStep = 360.0f / m_generatrixApprox;
@@ -40,7 +44,7 @@ void Thorus::Construct()
                         (m_baseRadius + m_generatrixRadius * cosf(Tools::degToRad(rAngle))) * cosf(Tools::degToRad(RAngle)),
                         (m_baseRadius + m_generatrixRadius * cosf(Tools::degToRad(rAngle))) * sinf(Tools::degToRad(RAngle)),
                         m_generatrixRadius * sinf(Tools::degToRad(rAngle)));
-            GetMesh().AddVertex(vert);
+            m_mesh.AddVertex(vert);
             rAngle += rStep;
         }
         rAngle = -180;
@@ -62,7 +66,7 @@ void Thorus::Construct()
                 edge.vertexIndexes[0] = j + (i * m_generatrixApprox);
                 edge.vertexIndexes[1] = j + (i * m_generatrixApprox) + 1;
             }
-            GetMesh().AddEdge(edge);
+            m_mesh.AddEdge(edge);
         }
     }
 
@@ -81,7 +85,7 @@ void Thorus::Construct()
                 edge.vertexIndexes[0] = j + (i * m_generatrixApprox);
                 edge.vertexIndexes[1] = j;
             }
-            GetMesh().AddEdge(edge);
+            m_mesh.AddEdge(edge);
         }
     }
 
@@ -95,44 +99,44 @@ void Thorus::Construct()
                 face.vertexIndexes[0] = j + (i * m_generatrixApprox);
                 face.vertexIndexes[1] = j + (i * m_generatrixApprox) + 1;
                 face.vertexIndexes[2] = j + ((i + 1) * m_generatrixApprox);
-                GetMesh().AddFace(face);
+                m_mesh.AddFace(face);
                 face.vertexIndexes[0] = j + ((i + 1) * m_generatrixApprox) + 1;
                 face.vertexIndexes[1] = j + ((i + 1) * m_generatrixApprox);
                 face.vertexIndexes[2] = j + (i * m_generatrixApprox) + 1;
-                GetMesh().AddFace(face);
+                m_mesh.AddFace(face);
             }
             else if ((j + 1 == m_generatrixApprox) && (i + 1 != m_baseApprox))
             {
                 face.vertexIndexes[0] = j + (i * m_generatrixApprox);
                 face.vertexIndexes[1] = j + (i * m_generatrixApprox) - m_generatrixApprox + 1;
                 face.vertexIndexes[2] = j + ((i + 1) * m_generatrixApprox);
-                GetMesh().AddFace(face);
+                m_mesh.AddFace(face);
                 face.vertexIndexes[0] = j + ((i + 1) * m_generatrixApprox) - m_generatrixApprox + 1;
                 face.vertexIndexes[1] = j + ((i + 1) * m_generatrixApprox);
                 face.vertexIndexes[2] = j + (i * m_generatrixApprox) - m_generatrixApprox + 1;
-                GetMesh().AddFace(face);
+                m_mesh.AddFace(face);
             }
             else if ((j + 1 != m_generatrixApprox) && (i + 1 == m_baseApprox))
             {
                 face.vertexIndexes[0] = j + (i * m_generatrixApprox);
                 face.vertexIndexes[1] = j + (i * m_generatrixApprox) + 1;
                 face.vertexIndexes[2] = j;
-                GetMesh().AddFace(face);
+                m_mesh.AddFace(face);
                 face.vertexIndexes[0] = j + 1;
                 face.vertexIndexes[1] = j;
                 face.vertexIndexes[2] = j + (i * m_generatrixApprox) + 1;
-                GetMesh().AddFace(face);
+                m_mesh.AddFace(face);
             }
             else
             {
                 face.vertexIndexes[0] = j + (i * m_generatrixApprox);
                 face.vertexIndexes[1] = j + (i * m_generatrixApprox) - m_generatrixApprox + 1;
                 face.vertexIndexes[2] = j;
-                GetMesh().AddFace(face);
+                m_mesh.AddFace(face);
                 face.vertexIndexes[0] = j - m_generatrixApprox + 1;
                 face.vertexIndexes[1] = j;
                 face.vertexIndexes[2] = j + (i * m_generatrixApprox) - m_generatrixApprox + 1;
-                GetMesh().AddFace(face);
+                m_mesh.AddFace(face);
             }
         }
     }

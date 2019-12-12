@@ -1,6 +1,44 @@
 #include "graphics/components/mesh.h"
+#include <QFile>
+#include <QTextStream>
 
-Mesh::Mesh() {}
+Mesh::Mesh() : m_normalType(CCW) {}
+
+Mesh Mesh::ReadFromObjFile(const QString &filepath)
+{
+    QFile file(filepath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return Mesh();
+
+    Mesh ret_val;
+    QTextStream in(&file);
+    while (!in.atEnd())
+    {
+        QStringList strlist = in.readLine().split(' ');
+        if (strlist[0] == "v")
+        {
+            Vertex vert;
+            vert.SetPosition(strlist[1].toFloat(), strlist[2].toFloat(), strlist[3].toFloat());
+            ret_val.AddVertex(vert);
+        }
+        if (strlist[0] == "f")
+        {
+            strlist[1] = strlist[1].split('/')[0];
+            strlist[2] = strlist[2].split('/')[0];
+            strlist[3] = strlist[3].split('/')[0];
+
+            Face face;
+            face.vertexIndexes[0] = (strlist[1].toInt() >= 0) ? strlist[1].toInt() : -strlist[1].toInt();
+            face.vertexIndexes[1] = (strlist[2].toInt() >= 0) ? strlist[2].toInt() : -strlist[2].toInt();
+            face.vertexIndexes[2] = (strlist[3].toInt() >= 0) ? strlist[3].toInt() : -strlist[3].toInt();
+            face.vertexIndexes[0] -= 1;
+            face.vertexIndexes[1] -= 1;
+            face.vertexIndexes[2] -= 1;
+
+            ret_val.AddFace(face);
+        }
+    }
+    return ret_val;
+}
 
 void Mesh::AddVertex(const Vertex& vertex)
 {
@@ -82,5 +120,15 @@ int Mesh::GetEdgesNum() const
 int Mesh::GetFacesNum() const
 {
     return m_faces.length();
+}
+
+void Mesh::SetNormalType(const Mesh::NormalType &nt)
+{
+    m_normalType = nt;
+}
+
+Mesh::NormalType Mesh::GetNormalType() const
+{
+    return m_normalType;
 }
 
